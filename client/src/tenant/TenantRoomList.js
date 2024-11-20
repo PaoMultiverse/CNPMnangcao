@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import {
   Box,
@@ -48,6 +48,7 @@ import { MdCheckCircle, } from "react-icons/md";
 import Chat from "../components/Chat";
 import { jwtDecode } from "jwt-decode";
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { debounce } from "lodash";
 
 const TenantRoomList = () => {
   const [rooms, setRooms] = useState([]);
@@ -70,9 +71,9 @@ const TenantRoomList = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [landlordInfo, setLandlordInfo] = useState(null);
-
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const FilterForm = () => (
-    <VStack 
+    <VStack
       spacing={2}
       align="center"
       bg="white"
@@ -81,62 +82,72 @@ const TenantRoomList = () => {
       boxShadow="md"
       border="2px solid"
       borderColor="gray.200"
-      top="30%"  
+      top="30%"
       zIndex="8"
     >
       <Text fontSize="xl" fontWeight="bold" mb={2}>
         Lọc để tìm kiếm
       </Text>
-      
+
       <HStack width="100%">
-      <Input
-        placeholder="Tìm kiếm chi tiết..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        bg="white"
-        _hover={{ borderColor: "blue.500" }}
-      />
+        <Input
+          placeholder="Tìm kiếm chi tiết..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          bg="white"
+          _hover={{ borderColor: "blue.500" }}
+        />
       </HStack>
-      <Select 
-        value={filterCity} // Hiển thị giá trị đã chọn
+      <Select
+        value={filterCity}
         onChange={handleCityChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
       >
-        {!filterCity && <option value="">Chọn thành phố</option>} {/* Hiển thị option "Chọn thành phố" nếu chưa chọn */}
-        {Array.from(new Set(rooms.map(room => room.address.split(', ')[3])))
-          .filter(city => city) // Lọc bỏ giá trị null/undefined
-          .sort() // Sắp xếp theo alphabet
-          .map(city => (
-            <option key={city} value={city}>{city}</option>
-        ))}
+        {!filterCity && <option value="">Chọn thành phố</option>}
+        {Array.from(new Set(rooms.map((room) => room.address.split(", ")[3])))
+          .filter((city) => city)
+          .sort()
+          .map((city) => (
+            <option key={city} value={city}>
+              {city}
+            </option>
+          ))}
       </Select>
-      
-      <Select 
-        value={filterDistrict} // Hiển thị giá trị đã chọn
+
+      <Select
+        value={filterDistrict}
         onChange={handleDistrictChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
-        isDisabled={!filterCity} // Disable nếu chưa chọn thành phố
+        isDisabled={!filterCity}
       >
-        {!filterDistrict && <option value="">Chọn quận</option>} {/* Hiển thị option "Chọn quận" nếu chưa chọn */}
-        {Array.from(new Set(rooms
-          .filter(room => !filterCity || room.address.includes(filterCity)) // Lọc theo thành phố đã chọn
-          .map(room => room.address.split(', ')[2])))
-          .filter(district => district) // Lọc bỏ giá trị null/undefined
-          .sort() // Sắp xếp theo alphabet
-          .map(district => (
-            <option key={district} value={district}>{district}</option>
-        ))}
+        {!filterDistrict && <option value="">Chọn quận</option>}
+        {Array.from(
+          new Set(
+            rooms
+              .filter((room) =>
+                !filterCity || room.address.includes(filterCity)
+              )
+              .map((room) => room.address.split(", ")[2])
+          )
+        )
+          .filter((district) => district)
+          .sort()
+          .map((district) => (
+            <option key={district} value={district}>
+              {district}
+            </option>
+          ))}
       </Select>
-      
-      <Select 
-        value={priceRange} // Hiển thị giá trị đã chọn
+
+      <Select
+        value={priceRange}
         onChange={handlePriceRangeChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
       >
-        {!priceRange && <option value="">Chọn khoảng giá</option>} {/* Hiển thị option "Chọn khoảng giá" nếu chưa chọn */}
+        {!priceRange && <option value="">Chọn khoảng giá</option>}
         <option value="500000-1000000">500.000đ - 1.000.000đ</option>
         <option value="1000000-3000000">1.000.000đ - 3.000.000đ</option>
         <option value="3000000-6000000">3.000.000đ - 6.000.000đ</option>
@@ -144,8 +155,7 @@ const TenantRoomList = () => {
         <option value="9000000-12000000">9.000.000đ - 12.000.000đ</option>
         <option value="12000000-20000000">12.000.000đ - 20.000.000đ</option>
       </Select>
-  
-      {/* Nút reset filter */}
+
       {(searchTerm || filterCity || filterDistrict || priceRange) && (
         <Button
           colorScheme="red"
@@ -164,14 +174,23 @@ const TenantRoomList = () => {
     </VStack>
   );
 
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setDebouncedSearchTerm(value);
+    }, 300), // 300ms trì hoãn
+    []
+  );
+
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedSearch(value); // Gọi debounce thay vì xử lý ngay
   };
 
   const handleCityChange = (e) => {
     const newCity = e.target.value;
     setFilterCity(newCity);
-    
+
     // Reset quận và khoảng giá khi đổi thành phố
     setFilterDistrict("");
     setPriceRange("");
@@ -180,7 +199,7 @@ const TenantRoomList = () => {
   const handleDistrictChange = (e) => {
     const newDistrict = e.target.value;
     setFilterDistrict(newDistrict);
-    
+
     // Reset khoảng giá khi đổi quận
     setPriceRange("");
   };
@@ -189,6 +208,14 @@ const TenantRoomList = () => {
     const newPriceRange = e.target.value;
     setPriceRange(newPriceRange);
   };
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      // Thực hiện logic lọc/sắp xếp khi giá trị debounce thay đổi
+      console.log("Đang tìm kiếm:", debouncedSearchTerm);
+    }
+  }, [debouncedSearchTerm]);
+
 
   const handleAddressChange = (e) => {
     setFilterAddress(e.target.value);
@@ -711,7 +738,7 @@ const TenantRoomList = () => {
                         {room.status}
                       </Tag>
                     </Flex>
-                    {/* <Flex justifyContent="space-between">
+                    <Flex justifyContent="space-between">
                       <Text fontWeight="bold">Giá:</Text>
                       <Text>
                         {new Intl.NumberFormat("vi-VN", {
@@ -719,7 +746,7 @@ const TenantRoomList = () => {
                           currency: "VND",
                         }).format(room.price)}
                       </Text>
-                    </Flex> */}
+                    </Flex>
                   </VStack>
                 </Box>
               ))}
@@ -781,7 +808,7 @@ const TenantRoomList = () => {
                     <Box>
                       <Text fontWeight="bold">Diện tích:</Text>
                       <Text color="gray.600">{selectedRoom.area} m²</Text>
-                    </Box>
+                    </Box> */}
                     <Box>
                       <Text fontWeight="bold">Giá thuê:</Text>
                       <Text color="gray.600">
@@ -790,8 +817,8 @@ const TenantRoomList = () => {
                           currency: "VND",
                         }).format(selectedRoom.price)}
                       </Text>
-                    </Box> */}
-                    <Box>
+                    </Box>
+                    {/* <Box>
                       <Text fontWeight="bold">Đặt cọc:</Text>
                       <Text color="gray.600">
                         {new Intl.NumberFormat("vi-VN", {
@@ -799,7 +826,7 @@ const TenantRoomList = () => {
                           currency: "VND",
                         }).format(selectedRoom.deposit)}
                       </Text>
-                    </Box>
+                    </Box> */}
                     <Box>
                       <Text fontWeight="bold">Tiện ích:</Text>
                       <List spacing={2}>

@@ -265,19 +265,7 @@ function TenantDashboard() {
         <Banner />
       </Box>
       
-        {/* Hiển thị thông tin phòng đã chọn nếu có */}
-        {selectedRoom && (
-        <Box>
-          <Heading size="lg">Thông tin phòng đã chọn:</Heading>
-          <Text fontWeight="bold">Tên phòng: {selectedRoom.category}</Text>
-          <Text>Địa chỉ: {selectedRoom.address}</Text>
-          <Text>Giá: {selectedRoom.price}</Text>
-          <Text>Diện tích: {selectedRoom.area}</Text>
-          <Text>Đặt cọc: {selectedRoom.deposit}</Text>
-          <Text>Tiện ích: {selectedRoom.amenities.join(', ')}</Text>
-        </Box>
-        )}
-
+       
       {/* Danh sách phòng */}
       <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} gap={4}>
         {rooms.map((room) => (

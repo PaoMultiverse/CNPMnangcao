@@ -113,8 +113,8 @@ function TenantContract() {
       {isLoading ? (
         <Spinner />
       ) : (
-        <Table variant="simple">
-          <Thead>
+        <Table variant="simple" >
+          <Thead bg="cyan.100">
             <Tr>
               <Th>Mã hợp đồng</Th>
               <Th>Tên phòng</Th>

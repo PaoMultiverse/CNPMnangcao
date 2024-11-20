@@ -104,7 +104,7 @@ const TenantBookingManagement = () => {
         </Text>
       
       <Table variant="simple">
-        <Thead>
+        <Thead bg="cyan.100">
           <Tr>
             <Th>Phòng</Th>
             <Th>Chủ trọ</Th>

@@ -217,7 +217,7 @@ function TenantPayments() {
         ) : (
           <Box overflowX="auto">
             <Table variant="simple" borderWidth={1} borderRadius="lg">
-              <Thead bg="teal.50">
+              <Thead bg="cyan.100">
                 <Tr>
                   <Th>Phòng</Th>
                   <Th>Ngày thanh toán</Th>
