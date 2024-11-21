@@ -14,12 +14,13 @@ import {
   Spinner,
   useToast,
   Button,
-  Flex
-
+  Flex,
+  Tooltip // Thêm Tooltip
 } from "@chakra-ui/react";
 import axios from "axios";
-import {  FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+
 function TenantContract() {
   const [contracts, setContracts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,7 +94,6 @@ function TenantContract() {
     navigate(-1);
   };
 
-
   return (
     <Box p={4}>
       {/* Nút Quay lại */}
@@ -105,15 +105,17 @@ function TenantContract() {
         >
           Quay lại
         </Button>
-        
       </Flex>
-      <Text fontSize="2xl" fontWeight="bold" textAlign="center" flex="1" mx={4}>
-          Danh sách hợp đồng
-        </Text>
+      <Flex alignItems="center" 
+        justifyContent="center" 
+        mb={4} 
+        flexWrap="wrap">
+        <Text fontSize="2xl" fontWeight="bold">Danh sách hợp đồng</Text>
+      </Flex>
       {isLoading ? (
         <Spinner />
       ) : (
-        <Table variant="simple" >
+        <Table variant="simple">
           <Thead bg="cyan.100">
             <Tr>
               <Th>Mã hợp đồng</Th>
@@ -134,9 +136,33 @@ function TenantContract() {
             {contracts && contracts.length > 0 ? (
               contracts.map((contract) => (
                 <Tr key={contract._id}>
-                  <Td>{contract._id}</Td>
+                  <Td>
+                    <Tooltip label={contract._id} placement="top">
+                      <Text
+                        isTruncated
+                        maxW="150px" // Giới hạn chiều rộng
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                      >
+                        {contract._id}
+                      </Text>
+                    </Tooltip>
+                  </Td>
                   <Td>{contract.roomName}</Td>
-                  <Td>{contract.address}</Td>
+                  <Td>
+                    <Tooltip label={contract.address} placement="top">
+                      <Text
+                        isTruncated
+                        maxW="150px" // Giới hạn chiều rộng
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
+                      >
+                        {contract.address}
+                      </Text>
+                    </Tooltip>
+                  </Td>
                   <Td>
                     <Text>{contract.landlordName}</Text>
                     <Text fontSize="sm">{contract.landlordPhone}</Text>

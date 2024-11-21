@@ -128,27 +128,27 @@ const BillList = () => {
       <Table variant="simple">
         <Thead bg="cyan.100">
           <Tr>
-            <Th>Phòng</Th>
-            <Th>Ngày tạo</Th>
-            <Th>Tiền phòng</Th>
-            <Th>Tiền điện</Th>
-            <Th>Tiền nước</Th>
-            <Th>Tổng tiền</Th>
-            <Th>Trạng thái</Th>
-            <Th>Hạn thanh toán</Th>
+            <Th textAlign="center">Phòng</Th>
+            <Th textAlign="center">Ngày tạo</Th>
+            <Th textAlign="center">Tiền phòng</Th>
+            <Th textAlign="center">Tiền điện</Th>
+            <Th textAlign="center">Tiền nước</Th>
+            <Th textAlign="center">Tổng tiền</Th>
+            <Th textAlign="center">Trạng thái</Th>
+            <Th textAlign="center">Hạn thanh toán</Th>
             <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
           {bills.map(bill => (
             <Tr key={bill._id}>
-              <Td>{bill.roomId.roomName}</Td>
-              <Td>{new Date(bill.createdAt).toLocaleDateString('vi-VN')}</Td>
-              <Td>{formatCurrency(bill.rentFee)}</Td>
-              <Td>{formatCurrency(bill.electricityFee)}</Td>
-              <Td>{formatCurrency(bill.waterFee)}</Td>
-              <Td>{formatCurrency(bill.totalAmount)}</Td>
-              <Td>
+              <Td textAlign="center">{bill.roomId.roomName}</Td>
+              <Td textAlign="center">{new Date(bill.createdAt).toLocaleDateString('vi-VN')}</Td>
+              <Td textAlign="center">{formatCurrency(bill.rentFee)}</Td>
+              <Td textAlign="center">{formatCurrency(bill.electricityFee)}</Td>
+              <Td textAlign="center">{formatCurrency(bill.waterFee)}</Td>
+              <Td textAlign="center">{formatCurrency(bill.totalAmount)}</Td>
+              <Td textAlign="center">
                 <Badge colorScheme={getStatusColor(bill.status)}>
                   {bill.status === 'PENDING' ? 'Chờ thanh toán' : 
                    bill.status === 'PAID' ? 'Đã thanh toán' : 'Quá hạn'}

@@ -260,7 +260,15 @@ function TenantDashboard() {
         }
       );
       if (response.data.success) {
-        setSelectedRoom(response.data.data);
+        setSelectedRoom(response.data.data); // Gán thông tin phòng vào state
+      } else {
+        toast({
+          title: "Lỗi",
+          description: "Không thể tải thông tin phòng",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (error) {
       console.error("Error fetching room detail:", error);
@@ -342,7 +350,7 @@ function TenantDashboard() {
         </Box>
       )}
 
-      <Heading size="lg">Danh sách phòng</Heading>
+      <Heading size="lg" >Danh sách phòng</Heading>
 
       {/* Carousel */}
       <Flex
@@ -488,67 +496,6 @@ function TenantDashboard() {
         </ModalContent>
       </Modal>
 
-      {/* <VStack spacing={10} align="center" p={4} w="100%">
-     
-      <Flex overflow="hidden" mb={10} w="100%" justifyContent="center" >
-        <Flex as={motion.div} whileTap={{ cursor: "grabbing" }} w="100%" overflowX="auto">
-          {categories.map((category, index) => (
-            <Box key={index} p={4} minW="200px" textAlign="center" onClick={() => handleCategoryClick(category.name)}>
-              <Image src={category.image} alt={category.name} boxSize="150px" objectFit="cover" />
-              <Text mt={2} fontWeight="bold">{category.name}</Text>
-            </Box>
-          ))}
-        </Flex>
-      </Flex>
-
-     
-      {selectedCategory && (
-        <Box w="100%">
-          <Heading size="md" mb={4}>Phòng tại {selectedCategory}</Heading>
-          {filteredRooms.map((room, index) => (
-            <Box key={index} p={4} mb={4} bg="white" borderRadius="lg" boxShadow="lg">
-              <Image src={room.image} alt="Room" w="100%" h="200px" objectFit="cover" borderRadius="md" />
-              <Text fontWeight="bold" mt={4}>Địa chỉ:</Text>
-              <Text>{room.address}</Text>
-              <Text fontWeight="bold" mt={2}>Diện tích:</Text>
-              <Text>{room.area}</Text>
-              <Text fontWeight="bold" mt={2}>Giá thuê:</Text>
-              <Text>{room.price}</Text>
-              <Text fontWeight="bold" mt={2}>Đặt cọc:</Text>
-              <Text>{room.deposit}</Text>
-              <Text fontWeight="bold" mt={2}>Tiện ích:</Text>
-              <VStack align="start" spacing={1}>
-                {room.amenities.map((amenity, idx) => (
-                  <Text key={idx}>- {amenity}</Text>
-                ))}
-              </VStack>
-            </Box>
-          ))}
-        </Box>
-      )}
-    </VStack> */}
-
-      {/* Danh mục */}
-      {/* <Flex overflow="hidden" mb={10} w="100%" justifyContent="center">
-          <Flex as={motion.div} whileTap={{ cursor: "grabbing" }} w="100%" overflowX="auto" justifyContent="center">
-            {categories.map((category, index) => (
-              <Box 
-                key={index} 
-                p={4} 
-                minW="200px" 
-                textAlign="center" 
-                onClick={() => handleCategoryClick(category.name)}
-                borderRadius="md" 
-                boxShadow="md" 
-                transition="transform 0.2s" 
-                _hover={{ transform: "scale(1.05)", boxShadow: "lg" }} // Hiệu ứng hover
-              >
-                <Image src={category.image} alt={category.name} boxSize="150px" objectFit="cover" borderRadius="md" />
-                <Text mt={2} fontWeight="bold">{category.name}</Text>
-              </Box>
-            ))}
-          </Flex>
-        </Flex> */}
 
       {/* RoomList button */}
       <Box display="flex" justifyContent="center" mb={20}>
@@ -696,15 +643,6 @@ function TenantDashboard() {
         </ModalContent>
       </Modal>
 
-      {/* News & Updates */}
-      {/* <Heading fontSize="2xl" textAlign="center">Tin tức & Thành tựu</Heading>
-      <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={4} w="100%">
-        {images.map((img, idx) => (
-          <Box key={idx} w="100%" h="250px" bgImage={`url(${img})`} bgSize="cover" borderRadius="lg" 
-          _hover={{ transform: "scale(1.05)" }}
-              transition="transform 0.2s" />
-        ))}
-      </Grid> */}
     </VStack>
   );
 }

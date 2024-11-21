@@ -173,14 +173,12 @@ function TenantPayments() {
       
         
         <Stack spacing={4}>
-          <Flex alignItems="center" 
-          justifyContent="center" 
-          mb={4} >
-            <Text fontSize="2xl" fontWeight="bold">
-              Lịch sử thanh toán
-            </Text>
-            <Box w="40px" /> {/* Để cân bằng layout */}
-          </Flex>
+        <Flex alignItems="center" 
+        justifyContent="center" 
+        mb={4} 
+        flexWrap="wrap">
+        <Text fontSize="2xl" fontWeight="bold">Lịch sử thanh toán</Text>
+      </Flex>
 
         <Stack direction={["column", "row"]} spacing={4}>
           <InputGroup>
@@ -229,11 +227,11 @@ function TenantPayments() {
             <Table variant="simple" borderWidth={1} borderRadius="lg">
               <Thead bg="cyan.100">
                 <Tr>
-                  <Th>Phòng</Th>
-                  <Th>Ngày thanh toán</Th>
-                  <Th>Phương thức</Th>
-                  <Th isNumeric>Số tiền</Th>
-                  <Th>Trạng thái</Th>
+                  <Th textAlign="center">Phòng</Th>
+                  <Th textAlign="center">Ngày thanh toán</Th>
+                  <Th textAlign="center">Phương thức</Th>
+                  <Th isNumeric textAlign="center">Số tiền</Th>
+                  <Th textAlign="center">Trạng thái</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -247,11 +245,11 @@ function TenantPayments() {
                       setIsOpenDetail(true);
                     }}
                   >
-                    <Td>{payment.roomId.roomName}</Td>
-                    <Td>{formatDate(payment.paymentDate)}</Td>
-                    <Td>{payment.paymentMethod}</Td>
-                    <Td isNumeric>{formatCurrency(payment.totalAmount)}</Td>
-                    <Td>{getStatusBadge(payment.status)}</Td>
+                    <Td textAlign="center">{payment.roomId.roomName}</Td>
+                    <Td textAlign="center">{formatDate(payment.paymentDate)}</Td>
+                    <Td textAlign="center">{payment.paymentMethod}</Td>
+                    <Td  textAlign="center" isNumeric>{formatCurrency(payment.totalAmount)}</Td>
+                    <Td textAlign="center">{getStatusBadge(payment.status)}</Td>
                   </Tr>
                 ))}
               </Tbody>

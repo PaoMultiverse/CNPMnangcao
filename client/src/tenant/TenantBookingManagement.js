@@ -99,47 +99,50 @@ const TenantBookingManagement = () => {
           Quay lại
         </Button> 
       </Flex>
-      <Text fontSize="2xl" fontWeight="bold" textAlign="center" flex="1" my={4}>
-          Danh sách lịch xem phòng của bạn
-        </Text>
+      <Flex alignItems="center" 
+        justifyContent="center" 
+        mb={4} 
+        flexWrap="wrap">
+        <Text fontSize="2xl" fontWeight="bold">Danh sách lịch xem phòng của bạn</Text>
+      </Flex>
       
       <Table variant="simple">
         <Thead bg="cyan.100">
           <Tr>
-            <Th>Phòng</Th>
-            <Th>Chủ trọ</Th>
-            <Th>Ngày xem</Th>
-            <Th>Ngày dự phòng</Th>
-            <Th>Trạng thái</Th>
-            <Th>Thao tác</Th>
+            <Th textAlign="center">Phòng</Th>
+            <Th textAlign="center">Chủ trọ</Th>
+            <Th textAlign="center">Ngày xem</Th>
+            <Th textAlign="center">Ngày dự phòng</Th>
+            <Th textAlign="center">Trạng thái</Th>
+            <Th textAlign="center">Thao tác</Th>
           </Tr>
         </Thead>
         <Tbody>
           {bookings.map((booking) => (
             <Tr key={booking._id}>
-              <Td>
+              <Td textAlign="center">
                 <Text fontWeight="bold">{booking.roomId?.roomName || 'N/A'}</Text>
                 <Text fontSize="sm" color="gray.600">
                   {booking.roomId?.roomTitle || 'N/A'}
                 </Text>
               </Td>
-              <Td>
+              <Td textAlign="center">
                 <Text>{booking.landlordId?.name || 'N/A'}</Text>
                 <Text fontSize="sm" color="gray.600">
                   {booking.landlordId?.email || 'N/A'}
                 </Text>
               </Td>
-              <Td>
+              <Td textAlign="center">
                 {booking.proposedDate 
                   ? new Date(booking.proposedDate).toLocaleString('vi-VN')
                   : 'N/A'}
               </Td>
-              <Td>
+              <Td textAlign="center">
                 {booking.alternativeDate 
                   ? new Date(booking.alternativeDate).toLocaleString('vi-VN')
                   : 'Không có'}
               </Td>
-              <Td>
+              <Td textAlign="center">
                 <Badge
                   colorScheme={
                     booking.status === 'pending' ? 'yellow' :
@@ -150,7 +153,7 @@ const TenantBookingManagement = () => {
                    booking.status === 'accepted' ? 'Đã chấp nhận' : 'Đã từ chối'}
                 </Badge>
               </Td>
-              <Td>
+              <Td textAlign="center">
                 {booking.status === 'accepted' && (
                   <Button
                     colorScheme="blue"
