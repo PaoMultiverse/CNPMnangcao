@@ -156,9 +156,11 @@ function TenantPayments() {
   };
 
   return (
-    <Container maxW="container.xl" py={4}>
-      <Stack spacing={6}>
-        <Flex alignItems="center" justifyContent="space-between">
+    <Flex
+      direction="column" // Thay đổi hướng thành cột để chứa nút và container
+      alignItems="stretch"
+    >
+      <Flex alignItems="center" justifyContent="space-between" mb={4}>
           <Button
             onClick={() => navigate(-1)}
             colorScheme="teal"
@@ -166,11 +168,19 @@ function TenantPayments() {
           >
             Quay lại
           </Button>
-          <Text fontSize="2xl" fontWeight="bold">
-            Lịch sử thanh toán
-          </Text>
-          <Box w="40px" /> {/* Để cân bằng layout */}
         </Flex>
+      <Container maxW="container.xl" py={4}>
+      
+        
+        <Stack spacing={4}>
+          <Flex alignItems="center" 
+          justifyContent="center" 
+          mb={4} >
+            <Text fontSize="2xl" fontWeight="bold">
+              Lịch sử thanh toán
+            </Text>
+            <Box w="40px" /> {/* Để cân bằng layout */}
+          </Flex>
 
         <Stack direction={["column", "row"]} spacing={4}>
           <InputGroup>
@@ -280,6 +290,7 @@ function TenantPayments() {
         </Modal>
       </Stack>
     </Container>
+    </Flex>
   );
 }
 

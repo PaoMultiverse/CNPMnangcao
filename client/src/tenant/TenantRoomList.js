@@ -548,9 +548,9 @@ const TenantRoomList = () => {
 
   return (
     <Flex 
-    direction="column" // Thay đổi hướng thành cột để chứa nút và container
-    alignItems="stretch"
-  >
+      direction="column" // Thay đổi hướng thành cột để chứa nút và container
+      alignItems="stretch"
+    >
     <Flex 
         alignItems="center" 
         justifyContent="space-between" 
@@ -738,7 +738,7 @@ const TenantRoomList = () => {
                         {room.status}
                       </Tag>
                     </Flex>
-                    <Flex justifyContent="space-between">
+                    {/* <Flex justifyContent="space-between">
                       <Text fontWeight="bold">Giá:</Text>
                       <Text>
                         {new Intl.NumberFormat("vi-VN", {
@@ -746,7 +746,7 @@ const TenantRoomList = () => {
                           currency: "VND",
                         }).format(room.price)}
                       </Text>
-                    </Flex>
+                    </Flex> */}
                   </VStack>
                 </Box>
               ))}
@@ -776,6 +776,12 @@ const TenantRoomList = () => {
           <ModalBody>
             {selectedRoom && (
               <VStack spacing={4}>
+                <Text 
+                  fontSize="xl" 
+                  fontWeight="bold"
+                >
+                  {selectedRoom.roomTitle}
+                </Text> {/* Thêm tiêu đề phòng ở đây */}
                 <Image
                   src={selectedRoom.image}
                   alt={selectedRoom.roomName}
@@ -784,6 +790,7 @@ const TenantRoomList = () => {
                   objectFit="cover"
                   borderRadius={{ base: "20px", lg: "20px" }}
                 />
+                
                 <Button
                   colorScheme="yellow"
                   width="100%"
@@ -810,7 +817,7 @@ const TenantRoomList = () => {
                       <Text color="gray.600">{selectedRoom.area} m²</Text>
                     </Box> */}
                     <Box>
-                      <Text fontWeight="bold">Giá thuê:</Text>
+                      <Text  fontWeight="bold">Giá thuê:</Text>
                       <Text color="gray.600">
                         {new Intl.NumberFormat("vi-VN", {
                           style: "currency",
@@ -844,14 +851,15 @@ const TenantRoomList = () => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Grid templateColumns="repeat(3, 1fr)" gap={3} width="100%">
-              <Button
-                colorScheme="red"
-                onClick={() => setIsOpenDetail(false)}
-              >
-                Đóng
-              </Button>
-              <Button
+          <Flex width="100%" justifyContent="center">
+            <Button
+              colorScheme="red"
+              onClick={() => setIsOpenDetail(false)}
+            >
+              Đóng
+            </Button>
+          </Flex>
+              {/* <Button
                 colorScheme="teal"
                 onClick={async () => {
                   if (currentUser) {
@@ -889,8 +897,8 @@ const TenantRoomList = () => {
                 }}
               >
                 Đặt lịch xem phòng
-              </Button>
-            </Grid>
+              </Button> */}
+           
           </ModalFooter>
         </ModalContent>
       </Modal>

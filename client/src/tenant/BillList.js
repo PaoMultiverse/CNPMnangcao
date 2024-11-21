@@ -16,6 +16,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
+import {  FaArrowLeft } from "react-icons/fa";
 
 const BillList = () => {
   const [bills, setBills] = useState([]);
@@ -93,10 +94,34 @@ const BillList = () => {
         return 'Có lỗi xảy ra khi thanh toán';
     }
   };
+  const handleGoBack = () => {
+    navigate(-1);
+  };
 
   return (
+    <Flex 
+      direction="column" // Thay đổi hướng thành cột để chứa nút và container
+      alignItems="stretch"
+    >
+      <Flex alignItems="center" 
+        justifyContent="space-between" 
+        mb={4} 
+        flexWrap="wrap">
+      <Button
+        onClick={handleGoBack}
+        colorScheme="teal"
+        leftIcon={<FaArrowLeft />}
+        mb={{ base: 2, md: 0 }} // Thêm khoảng cách dưới nút ở chế độ mobile
+      >
+        Quay lại
+      </Button>
+      </Flex>
+      
     <Container maxW="container.xl" py={4}>
-      <Flex justifyContent="space-between" alignItems="center" mb={4}>
+      <Flex alignItems="center" 
+        justifyContent="center" 
+        mb={4} 
+        flexWrap="wrap">
         <Text fontSize="2xl" fontWeight="bold">Danh sách hóa đơn</Text>
       </Flex>
 
@@ -144,6 +169,7 @@ const BillList = () => {
         </Tbody>
       </Table>
     </Container>
+    </Flex>
   );
 };
 

@@ -99,7 +99,7 @@ const TenantBookingManagement = () => {
           Quay lại
         </Button> 
       </Flex>
-      <Text fontSize="2xl" fontWeight="bold" textAlign="center" flex="1" mx={4}>
+      <Text fontSize="2xl" fontWeight="bold" textAlign="center" flex="1" my={4}>
           Danh sách lịch xem phòng của bạn
         </Text>
       

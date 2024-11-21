@@ -262,7 +262,7 @@ const BookingModal = ({ isOpen, onClose, room, currentUser }) => {
   );
 };
 
-  const onOpenBooking = () => setIsOpenBooking(true);
+  const onOpenBooking = () => setIsOpenBooking(true); // Hàm mở modal đặt lịch
   const onCloseBooking = () => setIsOpenBooking(false);
   const fetchLandlordInfo = async (landlordId) => {
     try {
@@ -299,7 +299,7 @@ const BookingModal = ({ isOpen, onClose, room, currentUser }) => {
       >
         Quay lại
       </Button>
-      <Box bg="white" borderRadius="lg" overflow="hidden" boxShadow="lg">
+      <Box bg="gray.100" overflow="hidden" boxShadow="lg" borderRadius={20}>
         <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6}>
           <GridItem>
             <Image
@@ -308,6 +308,7 @@ const BookingModal = ({ isOpen, onClose, room, currentUser }) => {
               w="100%"
               h="500px"
               objectFit="cover"
+              borderRadius={20}
             />
           </GridItem>
           
@@ -364,10 +365,9 @@ const BookingModal = ({ isOpen, onClose, room, currentUser }) => {
                 </List>
               </Box>
 
-              <Flex gap={4}>
+              <Flex gap={4} ml={25}>
                 <Button
-                  colorScheme="teal"
-                  size="lg"
+                  colorScheme="teal"                  
                   onClick={async () => {
                     if (currentUser) {
                       await fetchLandlordInfo(room.landlordId);
@@ -405,6 +405,14 @@ const BookingModal = ({ isOpen, onClose, room, currentUser }) => {
                   Đặt lịch xem phòng
                 </Button>
               </Flex>
+              {isOpenBooking && (
+              <BookingModal
+                isOpen={isOpenBooking}
+                onClose={onCloseBooking}
+                room={room} // Truyền thông tin phòng vào modal
+                currentUser={currentUser}
+              />
+            )}
             </VStack>
           </GridItem>
         </Grid>
