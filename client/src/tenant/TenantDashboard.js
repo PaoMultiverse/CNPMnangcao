@@ -410,12 +410,12 @@ function TenantDashboard() {
                 objectFit="cover"
                 fallbackSrc="https://via.placeholder.com/200"
               />
-              <VStack p={4} align="start" spacing={2}>
+              <VStack p={4} align="stretch" spacing={2}>
                 <Text fontWeight="bold" fontSize="lg" noOfLines={1}>
                   {room.roomTitle}
                 </Text>
                 <Flex justifyContent="space-between" alignItems="center" mt="2">
-                  <Text fontWeight="bold">Tình trạng:</Text>
+                  <Text fontWeight="bold">Tình trạng: </Text>
                   <Tag
                     colorScheme={room.status === "available" ? "green" : "red"}
                   >
