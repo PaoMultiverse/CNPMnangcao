@@ -92,13 +92,14 @@ io.on("connection", (socket) => {
       console.log("Message saved:", savedMessage);
 
       // Gửi tin nhắn đến người nhận nếu online
-      const recipientSocketId = userSockets.get(recipientId);
-      if (recipientSocketId) {
-        io.to(recipientSocketId).emit("receive_message", {
-          ...savedMessage.toObject(),
-          senderName: socket.userId, // Thêm tên người gửi nếu cần
-        });
-      }
+     // Chỉ gửi tin nhắn đến người nhận
+        const recipientSocketId = userSockets.get(recipientId);
+        if (recipientSocketId && recipientSocketId !== socket.id) { // Thêm điều kiện kiểm tra
+          io.to(recipientSocketId).emit("receive_message", {
+            ...savedMessage.toObject(),
+            senderName: socket.userId,
+          });
+        }
 
       // Gửi xác nhận về người gửi
       socket.emit("message_sent", {

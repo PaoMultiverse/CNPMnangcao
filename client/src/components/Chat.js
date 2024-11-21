@@ -62,9 +62,9 @@ const Chat = ({ currentUserId, recipientId, recipientName, onClose }) => {
     // Lắng nghe tin nhắn mới
     socket.on("receive_message", (message) => {
       console.log("Received message:", message);
-      if (message.senderId === recipientId) {
+      // Chỉ hiển thị tin nhắn từ người khác gửi đến
+      if (message.senderId === recipientId && message.recipientId === currentUserId) {
         setMessages((prev) => [...prev, message]);
-        // Đánh dấu đã đọc ngay khi nhận tin nhắn mới
         markMessagesAsRead();
         scrollToBottom();
       }
