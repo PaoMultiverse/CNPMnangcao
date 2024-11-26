@@ -153,7 +153,9 @@ function TenantContract() {
                   <Td>
                     <Tag colorScheme={getStatusColor(contract.status)}>
                       {contract.status === "active"
+
                         ? "Còn hiệu lực"
+              
                         : contract.status === "expired"
                         ? "Hết hạn"
                         : "Chưa bắt đầu"}
