@@ -14,11 +14,10 @@ import {
   Spinner,
   useToast,
   Button,
-  Flex
-
+  Flex,
 } from "@chakra-ui/react";
 import axios from "axios";
-import {  FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 function TenantContract() {
   const [contracts, setContracts] = useState([]);
@@ -47,7 +46,7 @@ function TenantContract() {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('vi-VN');
+    return new Date(dateString).toLocaleDateString("vi-VN");
   };
 
   useEffect(() => {
@@ -57,8 +56,8 @@ function TenantContract() {
           `${process.env.REACT_APP_API}/user/tenant/contracts`,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
 
@@ -71,7 +70,7 @@ function TenantContract() {
           description: "Không thể tải thông tin hợp đồng",
           status: "error",
           duration: 3000,
-          isClosable: true
+          isClosable: true,
         });
       } finally {
         setIsLoading(false);
@@ -93,7 +92,6 @@ function TenantContract() {
     navigate(-1);
   };
 
-
   return (
     <Box p={4}>
       {/* Nút Quay lại */}
@@ -105,18 +103,23 @@ function TenantContract() {
         >
           Quay lại
         </Button>
-        
       </Flex>
-      <Text fontSize="2xl" fontWeight="bold" textAlign="center" flex="1" mx={4}>
-          Danh sách hợp đồng
-        </Text>
+      <Text
+        textColor={"brand.700"}
+        fontSize={{ base: "2xl", md: "3xl" }}
+        fontWeight="bold"
+        textAlign="center"
+        flex="1"
+        my={4}
+      >
+        Danh sách hợp đồng
+      </Text>
       {isLoading ? (
         <Spinner />
       ) : (
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Mã hợp đồng</Th>
               <Th>Tên phòng</Th>
               <Th>Địa chỉ</Th>
               <Th>Chủ trọ</Th>
@@ -134,7 +137,6 @@ function TenantContract() {
             {contracts && contracts.length > 0 ? (
               contracts.map((contract) => (
                 <Tr key={contract._id}>
-                  <Td>{contract._id}</Td>
                   <Td>{contract.roomName}</Td>
                   <Td>{contract.address}</Td>
                   <Td>
@@ -150,15 +152,20 @@ function TenantContract() {
                   <Td>{formatDate(contract.endDate)}</Td>
                   <Td>
                     <Tag colorScheme={getStatusColor(contract.status)}>
-                      {contract.status === 'active' ? 'Đang hiệu lực' : 
-                       contract.status === 'expired' ? 'Hết hạn' : 'Chưa bắt đầu'}
+                      {contract.status === "active"
+                        ? "Còn hiệu lực"
+                        : contract.status === "expired"
+                        ? "Hết hạn"
+                        : "Chưa bắt đầu"}
                     </Tag>
                   </Td>
                 </Tr>
               ))
             ) : (
               <Tr>
-                <Td colSpan={12} textAlign="center">Không có hợp đồng nào</Td>
+                <Td colSpan={12} textAlign="center">
+                  Không có hợp đồng nào
+                </Td>
               </Tr>
             )}
           </Tbody>

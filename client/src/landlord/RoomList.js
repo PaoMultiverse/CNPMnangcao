@@ -43,7 +43,7 @@ const RoomList = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  // Thêm state để quản lý loading khi lấy thông tin phòng
+
   const [isLoadingRoom, setIsLoadingRoom] = useState(false);
 
   //Tính toán số trang
