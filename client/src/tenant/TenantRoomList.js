@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect, useCallback } from "react";
+=======
+import React, { useState, useEffect } from "react";
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 import axios from "axios";
 import {
   Box,
@@ -40,15 +44,19 @@ import {
   DrawerCloseButton,
   useDisclosure,
   TagCloseButton,
-  HStack
+  HStack,
 } from "@chakra-ui/react";
 import { FiFilter } from "react-icons/fi";
-import {  FaArrowLeft } from "react-icons/fa";
-import { MdCheckCircle, } from "react-icons/md";
+import { FaArrowLeft } from "react-icons/fa";
+import { MdCheckCircle } from "react-icons/md";
 import Chat from "../components/Chat";
 import { jwtDecode } from "jwt-decode";
+<<<<<<< HEAD
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { debounce } from "lodash";
+=======
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 
 const TenantRoomList = () => {
   const [rooms, setRooms] = useState([]);
@@ -61,7 +69,6 @@ const TenantRoomList = () => {
   const [isOpenBooking, setIsOpenBooking] = useState(false);
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("");
@@ -96,18 +103,34 @@ const TenantRoomList = () => {
           onChange={handleSearchChange}
           bg="white"
           _hover={{ borderColor: "blue.500" }}
+<<<<<<< HEAD
         />
       </HStack>
       <Select
         value={filterCity}
+=======
+          autoFocus
+        />
+      </HStack>
+      <Select
+        value={filterCity} // Hiển thị giá trị đã chọn
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         onChange={handleCityChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
       >
+<<<<<<< HEAD
         {!filterCity && <option value="">Chọn thành phố</option>}
         {Array.from(new Set(rooms.map((room) => room.address.split(", ")[3])))
           .filter((city) => city)
           .sort()
+=======
+        {!filterCity && <option value="">Chọn thành phố</option>}{" "}
+        {/* Hiển thị option "Chọn thành phố" nếu chưa chọn */}
+        {Array.from(new Set(rooms.map((room) => room.address.split(", ")[3])))
+          .filter((city) => city) // Lọc bỏ giá trị null/undefined
+          .sort() // Sắp xếp theo alphabet
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
           .map((city) => (
             <option key={city} value={city}>
               {city}
@@ -116,12 +139,17 @@ const TenantRoomList = () => {
       </Select>
 
       <Select
+<<<<<<< HEAD
         value={filterDistrict}
+=======
+        value={filterDistrict} // Hiển thị giá trị đã chọn
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         onChange={handleDistrictChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
         isDisabled={!filterCity}
       >
+<<<<<<< HEAD
         {!filterDistrict && <option value="">Chọn quận</option>}
         {Array.from(
           new Set(
@@ -134,6 +162,21 @@ const TenantRoomList = () => {
         )
           .filter((district) => district)
           .sort()
+=======
+        {!filterDistrict && <option value="">Chọn quận</option>}{" "}
+        {/* Hiển thị option "Chọn quận" nếu chưa chọn */}
+        {Array.from(
+          new Set(
+            rooms
+              .filter(
+                (room) => !filterCity || room.address.includes(filterCity)
+              ) // Lọc theo thành phố đã chọn
+              .map((room) => room.address.split(", ")[2])
+          )
+        )
+          .filter((district) => district) // Lọc bỏ giá trị null/undefined
+          .sort() // Sắp xếp theo alphabet
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
           .map((district) => (
             <option key={district} value={district}>
               {district}
@@ -142,12 +185,21 @@ const TenantRoomList = () => {
       </Select>
 
       <Select
+<<<<<<< HEAD
         value={priceRange}
+=======
+        value={priceRange} // Hiển thị giá trị đã chọn
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         onChange={handlePriceRangeChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
       >
+<<<<<<< HEAD
         {!priceRange && <option value="">Chọn khoảng giá</option>}
+=======
+        {!priceRange && <option value="">Chọn khoảng giá</option>}{" "}
+        {/* Hiển thị option "Chọn khoảng giá" nếu chưa chọn */}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         <option value="500000-1000000">500.000đ - 1.000.000đ</option>
         <option value="1000000-3000000">1.000.000đ - 3.000.000đ</option>
         <option value="3000000-6000000">3.000.000đ - 6.000.000đ</option>
@@ -156,6 +208,10 @@ const TenantRoomList = () => {
         <option value="12000000-20000000">12.000.000đ - 20.000.000đ</option>
       </Select>
 
+<<<<<<< HEAD
+=======
+      {/* Nút reset filter */}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
       {(searchTerm || filterCity || filterDistrict || priceRange) && (
         <Button
           colorScheme="red"
@@ -229,8 +285,6 @@ const TenantRoomList = () => {
     setMaxPrice(e.target.value);
   };
 
-  
-
   const filteredRooms = rooms.filter((room) => {
     const price = room.price || 0;
     let minPrice = 0;
@@ -256,16 +310,14 @@ const TenantRoomList = () => {
       case "9000000-10000000":
         minPrice = 9000000;
         maxPrice = 10000000;
-        break; 
+        break;
       case "10000000-20000000":
         minPrice = 10000000;
         maxPrice = 20000000;
-        break; 
+        break;
       default:
         break;
     }
-
-    
 
     return (
       room.roomTitle.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -280,7 +332,7 @@ const TenantRoomList = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        console.log(localStorage.getItem("token"))
+        console.log(localStorage.getItem("token"));
         const token = localStorage.getItem("token");
         if (!token) {
           console.error("No token found");
@@ -361,14 +413,13 @@ const TenantRoomList = () => {
   const handleRoomClick = (room) => {
     setSelectedRoom(room);
     setIsOpenDetail(true);
-    
   };
 
   const BookingModal = ({ isOpen, onClose, room, currentUser }) => {
     const [bookingData, setBookingData] = useState({
-      proposedDate: '',
-      alternativeDate: '',
-      message: ''
+      proposedDate: "",
+      alternativeDate: "",
+      message: "",
     });
     const toast = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -382,15 +433,15 @@ const TenantRoomList = () => {
             description: "Vui lòng chọn ngày xem phòng",
             status: "error",
             duration: 3000,
-            isClosable: true
+            isClosable: true,
           });
           return;
         }
 
-        console.log('Sending booking data:', {
+        console.log("Sending booking data:", {
           roomId: room.id,
           landlordId: room.landlordId,
-          ...bookingData
+          ...bookingData,
         });
 
         const response = await axios.post(
@@ -400,13 +451,13 @@ const TenantRoomList = () => {
             landlordId: room.landlordId,
             proposedDate: bookingData.proposedDate,
             alternativeDate: bookingData.alternativeDate || null,
-            message: bookingData.message || ''
+            message: bookingData.message || "",
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-              'Content-Type': 'application/json'
-            }
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
           }
         );
 
@@ -417,7 +468,7 @@ const TenantRoomList = () => {
               <Box>
                 <Text>Đã gửi yêu cầu xem phòng</Text>
                 <Button
-                  onClick={() => navigate('/tenant/bookings')}
+                  onClick={() => navigate("/tenant/bookings")}
                   size="sm"
                   mt={2}
                   colorScheme="blue"
@@ -428,18 +479,19 @@ const TenantRoomList = () => {
             ),
             status: "success",
             duration: 5000,
-            isClosable: true
+            isClosable: true,
           });
           onClose();
         }
       } catch (error) {
-        console.error('Booking error:', error.response?.data || error);
+        console.error("Booking error:", error.response?.data || error);
         toast({
           title: "Lỗi",
-          description: error.response?.data?.message || "Không thể gửi yêu cầu xem phòng",
+          description:
+            error.response?.data?.message || "Không thể gửi yêu cầu xem phòng",
           status: "error",
           duration: 3000,
-          isClosable: true
+          isClosable: true,
         });
       } finally {
         setIsSubmitting(false);
@@ -454,13 +506,22 @@ const TenantRoomList = () => {
           <ModalCloseButton />
           <ModalBody>
             <Box mb={4} p={4} borderWidth={1} borderRadius="md">
-              <Heading size="sm" mb={2}>Thông tin phòng:</Heading>
-              <Text><strong>Tên phòng:</strong> {room.roomName}</Text>
-              <Text><strong>Giá thuê:</strong> {new Intl.NumberFormat("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              }).format(room.price)}</Text>
-              <Text><strong>Diện tích:</strong> {room.area}m²</Text>
+              <Heading size="sm" mb={2}>
+                Thông tin phòng:
+              </Heading>
+              <Text>
+                <strong>Tên phòng:</strong> {room.roomName}
+              </Text>
+              <Text>
+                <strong>Giá thuê:</strong>{" "}
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(room.price)}
+              </Text>
+              <Text>
+                <strong>Diện tích:</strong> {room.area}m²
+              </Text>
             </Box>
 
             <VStack spacing={4}>
@@ -469,10 +530,12 @@ const TenantRoomList = () => {
                 <Input
                   type="datetime-local"
                   value={bookingData.proposedDate}
-                  onChange={(e) => setBookingData({
-                    ...bookingData,
-                    proposedDate: e.target.value
-                  })}
+                  onChange={(e) =>
+                    setBookingData({
+                      ...bookingData,
+                      proposedDate: e.target.value,
+                    })
+                  }
                 />
               </FormControl>
 
@@ -481,10 +544,12 @@ const TenantRoomList = () => {
                 <Input
                   type="datetime-local"
                   value={bookingData.alternativeDate}
-                  onChange={(e) => setBookingData({
-                    ...bookingData,
-                    alternativeDate: e.target.value
-                  })}
+                  onChange={(e) =>
+                    setBookingData({
+                      ...bookingData,
+                      alternativeDate: e.target.value,
+                    })
+                  }
                 />
               </FormControl>
 
@@ -492,26 +557,30 @@ const TenantRoomList = () => {
                 <FormLabel>Lời nhắn</FormLabel>
                 <Textarea
                   value={bookingData.message}
-                  onChange={(e) => setBookingData({
-                    ...bookingData,
-                    message: e.target.value
-                  })}
+                  onChange={(e) =>
+                    setBookingData({
+                      ...bookingData,
+                      message: e.target.value,
+                    })
+                  }
                   placeholder="Nhập lời nhắn cho chủ trọ..."
                 />
               </FormControl>
             </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button 
-              colorScheme="blue" 
-              mr={3} 
+            <Button
+              colorScheme="blue"
+              mr={3}
               onClick={handleSubmit}
               isLoading={isSubmitting}
               loadingText="Đang gửi..."
             >
               Gửi yêu cầu
             </Button>
-            <Button variant="ghost" onClick={onClose}>Hủy</Button>
+            <Button variant="ghost" onClick={onClose}>
+              Hủy
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -547,6 +616,7 @@ const TenantRoomList = () => {
   };
 
   return (
+<<<<<<< HEAD
     <Flex 
       direction="column" // Thay đổi hướng thành cột để chứa nút và container
       alignItems="stretch"
@@ -555,47 +625,55 @@ const TenantRoomList = () => {
         alignItems="center" 
         justifyContent="space-between" 
         mb={4} 
+=======
+    <Flex
+      direction="column" // Thay đổi hướng thành cột để chứa nút và container
+      alignItems="stretch"
+    >
+      <Flex
+        alignItems="center"
+        justifyContent="space-between"
+        mb={4}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         flexWrap="wrap" // Cho phép các phần tử xếp chồng lên nhau khi cần
       >
-      <Button
-        onClick={handleGoBack}
-        colorScheme="teal"
-        leftIcon={<FaArrowLeft />}
-        mb={{ base: 2, md: 0 }} // Thêm khoảng cách dưới nút ở chế độ mobile
-      >
-        Quay lại
-      </Button>
+        <Button
+          onClick={handleGoBack}
+          colorScheme="teal"
+          leftIcon={<FaArrowLeft />}
+          mb={{ base: 2, md: 0 }} // Thêm khoảng cách dưới nút ở chế độ mobile
+        >
+          Quay lại
+        </Button>
 
-      <IconButton
-        icon={<FiFilter />}
-        onClick={onOpen}
-        colorScheme="blue"
-        aria-label="Open filters"
-        display={{ base: "flex", md: "none" }}
-      />
-    </Flex>
-    <Container maxW="container.xl" py={4}>
-      
-
-      {/* Tiêu đề danh sách phòng */}
-      <Flex 
-        alignItems="center" 
-        justifyContent="center" 
-        mb={4} 
-        flexWrap="wrap" // Cho phép xếp chồng khi cần
-      >
-        <Text fontSize="3xl" fontWeight="bold" textAlign="center" mx={4}>
-          Danh sách phòng
-        </Text>
+        <IconButton
+          icon={<FiFilter />}
+          onClick={onOpen}
+          colorScheme="blue"
+          aria-label="Open filters"
+          display={{ base: "flex", md: "none" }}
+        />
       </Flex>
-
-      {/* Hiển thị các filter đã chọn */}
-        <Flex 
-          mb={4} 
-          gap={2} 
+      <Container maxW="container.xl" py={4}>
+        {/* Tiêu đề danh sách phòng */}
+        <Flex
           alignItems="center"
-          flexWrap="wrap"
-          width={{ base: "100%", md: "auto" }} // Đảm bảo chiếm toàn bộ chiều rộng ở chế độ responsive
+          justifyContent="center"
+          mb={4}
+          flexWrap="wrap" // Cho phép xếp chồng khi cần
+        >
+          <Text fontSize="3xl" fontWeight="bold" textAlign="center" mx={4}>
+            Danh sách phòng
+          </Text>
+        </Flex>
+
+        {/* Hiển thị các filter đã chọn */}
+        <Flex
+          mb={4}
+          gap={2}
+          alignItems="center"
+          justifyContent="space-between"
+          flexWrap="wrap" // Cho phép các phần tử xếp chồng lên nhau khi cần
         >
           {(searchTerm || filterCity || filterDistrict || priceRange) && (
             <>
@@ -619,9 +697,11 @@ const TenantRoomList = () => {
               )}
               {priceRange && (
                 <Tag colorScheme="orange" size="md">
-                  {priceRange.split('-').map(price => 
-                    Number(price).toLocaleString('vi-VN')
-                  ).join(' - ')} đ
+                  {priceRange
+                    .split("-")
+                    .map((price) => Number(price).toLocaleString("vi-VN"))
+                    .join(" - ")}{" "}
+                  đ
                   <TagCloseButton onClick={() => setPriceRange("")} />
                 </Tag>
               )}
@@ -629,28 +709,20 @@ const TenantRoomList = () => {
           )}
         </Flex>
         {/* Filter Drawer cho mobile */}
-        <Drawer 
-          isOpen={isOpen} 
-          placement="left" 
-          onClose={onClose}
-          size="xs"
-        >
+        <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="xs">
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerHeader borderBottomWidth="1px">Bộ lọc tìm kiếm</DrawerHeader>
             <DrawerBody>
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                onClose();
-              }}>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  onClose();
+                }}
+              >
                 <FilterForm />
-                <Button 
-                  mt={4} 
-                  colorScheme="blue" 
-                  w="100%" 
-                  onClick={onClose}
-                >
+                <Button mt={4} colorScheme="blue" w="100%" onClick={onClose}>
                   Áp dụng
                 </Button>
               </form>
@@ -658,67 +730,72 @@ const TenantRoomList = () => {
           </DrawerContent>
         </Drawer>
         <Grid templateColumns={{ base: "1fr", md: "1fr 3fr" }} gap={6}>
-           {/* Form filter cho desktop */}
-        <Box display={{ base: "none", md: "block" }}>
-          <form>
-            <FilterForm />
-          </form>
-        </Box>
+          {/* Form filter cho desktop */}
+          <Box display={{ base: "none", md: "block" }}>
+            <form>
+              <FilterForm />
+            </form>
+          </Box>
 
           {isLoading ? (
             <Center>
               <Spinner size="xl" />
             </Center>
           ) : filteredRooms.length === 0 ? (
-            <Flex 
-            alignItems="center" 
-            justifyContent="center" 
-            mb={4} 
-            flexWrap="wrap" // Cho phép xếp chồng khi cần
-          >
-            <Text textAlign="center" w="100%">Không có phòng nào</Text>
-          </Flex>
-          ) : (
-          <Box className='mb-20'>
-            <Box className='container mx-auto'>
-            <SimpleGrid 
-              columns={{ base: 1, md: 2, lg: 3 }} 
-              spacing={{ base: 4, lg: 4 }}
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              mb={4}
+              flexWrap="wrap" // Cho phép xếp chồng khi cần
             >
-              {filteredRooms.map((room) => (
-                <Box
-                  key={room.id}
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  overflow="hidden"
-                  boxShadow="md"
-                  bg="white"
-                  height="100%"
-                  display="flex"
-                  flexDirection="column"
-                  onClick={() => handleRoomClick(room)}
-                  cursor="pointer"
-                  _hover={{ transform: "scale(1.02)", transition: "all 0.2s" }}
-                  p={2}
+              <Text textAlign="center" w="100%">
+                Không có phòng nào
+              </Text>
+            </Flex>
+          ) : (
+            <Box className="mb-20">
+              <Box className="container mx-auto">
+                <SimpleGrid
+                  columns={{ base: 1, md: 2, lg: 3 }}
+                  spacing={{ base: 4, lg: 4 }}
                 >
-                  <Image
-                    src={room.image}
-                    alt={room.roomName}
-                    w="100%"
-                    h="200px"
-                    objectFit="cover"
-                    fallbackSrc="https://via.placeholder.com/200"
-                    borderRadius={{ base: "8px", lg: "8px" }}
-                  />
-                  <VStack p={4} align="stretch" spacing={2} flex="1">
-                    <Text 
-                      fontWeight="bold" 
-                      fontSize="lg"
-                      noOfLines={1}  // Giới hạn tiêu đề 1 dòng
+                  {filteredRooms.map((room) => (
+                    <Box
+                      key={room.id}
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      overflow="hidden"
+                      boxShadow="md"
+                      bg="white"
+                      height="100%"
+                      display="flex"
+                      flexDirection="column"
+                      onClick={() => handleRoomClick(room)}
+                      cursor="pointer"
+                      _hover={{
+                        transform: "scale(1.02)",
+                        transition: "all 0.2s",
+                      }}
+                      p={2}
                     >
-                      {room.roomTitle}
-                    </Text>
-                    {/* <Flex alignItems="flex-start">
+                      <Image
+                        src={room.image}
+                        alt={room.roomName}
+                        w="100%"
+                        h="200px"
+                        objectFit="cover"
+                        fallbackSrc="https://via.placeholder.com/200"
+                        borderRadius={{ base: "8px", lg: "8px" }}
+                      />
+                      <VStack p={4} align="stretch" spacing={2} flex="1">
+                        <Text
+                          fontWeight="bold"
+                          fontSize="lg"
+                          noOfLines={1} // Giới hạn tiêu đề 1 dòng
+                        >
+                          {room.roomTitle}
+                        </Text>
+                        {/* <Flex alignItems="flex-start">
                        <Text fontWeight="bold" width="70px" flexShrink={0}>
                         Địa chỉ:
                       </Text>
@@ -730,15 +807,20 @@ const TenantRoomList = () => {
                         {room.address}
                       </Text> 
                     </Flex> */}
-                    <Flex justifyContent="space-between" alignItems="center">
-                      <Text fontWeight="bold">Tình trạng:</Text>
-                      <Tag
-                        colorScheme={room.status === "Còn trống" ? "green" : "red"}
-                      >
-                        {room.status}
-                      </Tag>
-                    </Flex>
-                    {/* <Flex justifyContent="space-between">
+                        <Flex
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <Text fontWeight="bold">Tình trạng:</Text>
+                          <Tag
+                            colorScheme={
+                              room.status === "Còn trống" ? "green" : "red"
+                            }
+                          >
+                            {room.status}
+                          </Tag>
+                        </Flex>
+                        {/* <Flex justifyContent="space-between">
                       <Text fontWeight="bold">Giá:</Text>
                       <Text>
                         {new Intl.NumberFormat("vi-VN", {
@@ -747,16 +829,16 @@ const TenantRoomList = () => {
                         }).format(room.price)}
                       </Text>
                     </Flex> */}
-                  </VStack>
-                </Box>
-              ))}
-            </SimpleGrid>
+                      </VStack>
+                    </Box>
+                  ))}
+                </SimpleGrid>
+              </Box>
             </Box>
-          </Box>
           )}
         </Grid>
-      
 
+<<<<<<< HEAD
 
       <Modal
         isOpen={isOpenDetail}
@@ -807,8 +889,57 @@ const TenantRoomList = () => {
                     align="stretch"
                     spacing={4}
                     w={{ base: "100%", md: "100%" }}
+=======
+        <Modal
+          isOpen={isOpenDetail}
+          onClose={() => setIsOpenDetail(false)}
+          size={{ base: "full", md: "xl" }} // Responsive size
+          isCentered // Căn giữa modal
+        >
+          <ModalOverlay />
+          <ModalContent
+            mx={{ base: "4", md: "auto" }}
+            my={{ base: "4", md: "auto" }}
+            maxH={{ base: "100vh", md: "90vh" }}
+            overflow="auto" // Cho phép scroll nếu nội dung dài
+          >
+            <ModalHeader>Chi tiết phòng</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {selectedRoom && (
+                <VStack spacing={4}>
+                  <Image
+                    src={selectedRoom.image}
+                    alt={selectedRoom.roomName}
+                    w="100%"
+                    h="300px"
+                    objectFit="cover"
+                    borderRadius={{ base: "20px", lg: "20px" }}
+                  />
+                  <Button
+                    colorScheme="yellow"
+                    width="100%"
+                    onClick={() => {
+                      navigate(`/tenant/room-detail/${selectedRoom.id}`, {
+                        // Sử dụng đường dẫn mới
+                        state: { roomData: selectedRoom },
+                      });
+                    }}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
                   >
-                    {/* <Box>
+                    Xem chi tiết
+                  </Button>
+                  <Flex
+                    direction={{ base: "column", md: "row" }}
+                    gap={6}
+                    width="100%"
+                  >
+                    <VStack
+                      align="stretch"
+                      spacing={4}
+                      w={{ base: "100%", md: "100%" }}
+                    >
+                      {/* <Box>
                       <Text fontWeight="bold">Địa chỉ:</Text>
                       <Text color="gray.600">{selectedRoom.address}</Text>
                     </Box>
@@ -824,6 +955,7 @@ const TenantRoomList = () => {
                           currency: "VND",
                         }).format(selectedRoom.price)}
                       </Text>
+<<<<<<< HEAD
                     </Box>
                     {/* <Box>
                       <Text fontWeight="bold">Đặt cọc:</Text>
@@ -902,27 +1034,111 @@ const TenantRoomList = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+=======
+                    </Box> */}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 
-      {showChat && currentUser && selectedRoom && selectedRoom.landlordId && 
-        currentUser.id !== selectedRoom.landlordId && landlordInfo && (
-        <Chat
-          currentUserId={currentUser.id}
-          recipientId={selectedRoom.landlordId.toString()}
-          recipientName={landlordInfo.name}
-          onClose={handleCloseChat}
-        />
-      )}
+                      <Box>
+                        <Text fontWeight="bold">Đặt cọc:</Text>
+                        <Text color="gray.600">
+                          {new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(selectedRoom.deposit)}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Text fontWeight="bold">Tiện ích:</Text>
+                        <List spacing={2}>
+                          {selectedRoom.amenities.map((amenity, index) => (
+                            <ListItem key={index} color="gray.600">
+                              <ListIcon as={MdCheckCircle} color="green.500" />
+                              {amenity}
+                            </ListItem>
+                          ))}
+                        </List>
+                      </Box>
+                    </VStack>
+                  </Flex>
+                </VStack>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Grid templateColumns="repeat(3, 1fr)" gap={3} width="100%">
+                <Button
+                  colorScheme="red"
+                  onClick={() => setIsOpenDetail(false)}
+                >
+                  Đóng
+                </Button>
+                <Button
+                  colorScheme="teal"
+                  onClick={async () => {
+                    if (currentUser) {
+                      await fetchLandlordInfo(selectedRoom.landlordId);
+                      setShowChat(true);
+                      setIsOpenDetail(false);
+                    } else {
+                      toast({
+                        title: "Vui lòng đăng nhập",
+                        description: "Bạn cần đăng nhập để chat với chủ trọ",
+                        status: "warning",
+                        duration: 3000,
+                        isClosable: true,
+                      });
+                    }
+                  }}
+                >
+                  Liên hệ chủ trọ
+                </Button>
+                <Button
+                  colorScheme="blue"
+                  onClick={() => {
+                    if (currentUser) {
+                      setIsOpenDetail(false);
+                      onOpenBooking();
+                    } else {
+                      toast({
+                        title: "Vui lòng đăng nhập",
+                        description: "Bạn cần đăng nhập để đặt lịch xem phòng",
+                        status: "warning",
+                        duration: 3000,
+                        isClosable: true,
+                      });
+                    }
+                  }}
+                >
+                  Đặt lịch xem phòng
+                </Button>
+              </Grid>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
 
-      {isOpenBooking && selectedRoom && (
-        <BookingModal
-          isOpen={isOpenBooking}
-          onClose={onCloseBooking}
-          room={selectedRoom}
-          currentUser={currentUser}
-        />
-      )}
+        {showChat &&
+          currentUser &&
+          selectedRoom &&
+          selectedRoom.landlordId &&
+          currentUser.id !== selectedRoom.landlordId &&
+          landlordInfo && (
+            <Chat
+              currentUserId={currentUser.id}
+              recipientId={selectedRoom.landlordId.toString()}
+              recipientName={landlordInfo.name}
+              onClose={handleCloseChat}
+            />
+          )}
+
+        {isOpenBooking && selectedRoom && (
+          <BookingModal
+            isOpen={isOpenBooking}
+            onClose={onCloseBooking}
+            room={selectedRoom}
+            currentUser={currentUser}
+          />
+        )}
       </Container>
-      </Flex>
+    </Flex>
   );
 };
 

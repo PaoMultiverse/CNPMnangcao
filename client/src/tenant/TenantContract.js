@@ -15,7 +15,10 @@ import {
   useToast,
   Button,
   Flex,
+<<<<<<< HEAD
   Tooltip // Thêm Tooltip
+=======
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 } from "@chakra-ui/react";
 import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
@@ -48,7 +51,7 @@ function TenantContract() {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('vi-VN');
+    return new Date(dateString).toLocaleDateString("vi-VN");
   };
 
   useEffect(() => {
@@ -58,8 +61,8 @@ function TenantContract() {
           `${process.env.REACT_APP_API}/user/tenant/contracts`,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
 
@@ -72,7 +75,7 @@ function TenantContract() {
           description: "Không thể tải thông tin hợp đồng",
           status: "error",
           duration: 3000,
-          isClosable: true
+          isClosable: true,
         });
       } finally {
         setIsLoading(false);
@@ -106,12 +109,18 @@ function TenantContract() {
           Quay lại
         </Button>
       </Flex>
+<<<<<<< HEAD
       <Flex alignItems="center" 
         justifyContent="center" 
         mb={4} 
         flexWrap="wrap">
         <Text fontSize="2xl" fontWeight="bold">Danh sách hợp đồng</Text>
       </Flex>
+=======
+      <Text fontSize="2xl" fontWeight="bold" textAlign="center" flex="1" mx={4}>
+        Danh sách hợp đồng
+      </Text>
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
       {isLoading ? (
         <Spinner />
       ) : (
@@ -176,15 +185,20 @@ function TenantContract() {
                   <Td>{formatDate(contract.endDate)}</Td>
                   <Td>
                     <Tag colorScheme={getStatusColor(contract.status)}>
-                      {contract.status === 'active' ? 'Đang hiệu lực' : 
-                       contract.status === 'expired' ? 'Hết hạn' : 'Chưa bắt đầu'}
+                      {contract.status === "active"
+                        ? "Đang hiệu lực"
+                        : contract.status === "expired"
+                        ? "Hết hạn"
+                        : "Chưa bắt đầu"}
                     </Tag>
                   </Td>
                 </Tr>
               ))
             ) : (
               <Tr>
-                <Td colSpan={12} textAlign="center">Không có hợp đồng nào</Td>
+                <Td colSpan={12} textAlign="center">
+                  Không có hợp đồng nào
+                </Td>
               </Tr>
             )}
           </Tbody>
