@@ -2,21 +2,29 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
-  Container,
+  SimpleGrid,
   Image,
   Text,
+  Tag,
   VStack,
   Heading,
-  Grid,
-  GridItem,
-  Tag,
+  Flex,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button,
   List,
   ListItem,
   ListIcon,
-  Button,
-  useToast,
-  Flex,
   Center,
+<<<<<<< HEAD
+  Spinner,
+  useToast,
+=======
   Sp,
   Spinner,
   Modal,
@@ -25,11 +33,29 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
   FormControl,
   FormLabel,
   Input,
   Textarea,
+<<<<<<< HEAD
+  Grid,
+  GridItem,
+  Select,
+  Container,
+  IconButton,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  useDisclosure,
+  TagCloseButton,
+  HStack
+=======
   ModalFooter,
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 } from "@chakra-ui/react";
 import { MdCheckCircle } from "react-icons/md";
 import Chat from "../components/Chat";
@@ -43,6 +69,7 @@ const RoomDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const toast = useToast();
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
   const [room, setRoom] = useState(location.state?.roomData || null);
   const [currentUser, setCurrentUser] = useState(null);
@@ -50,6 +77,8 @@ const RoomDetail = () => {
   const [landlordInfo, setLandlordInfo] = useState(null);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
   const [isOpenBooking, setIsOpenBooking] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedImage, setSelectedImage] = useState(room.image);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -88,6 +117,172 @@ const RoomDetail = () => {
       fetchRoomDetail();
     }
   }, [id, room, toast]);
+<<<<<<< HEAD
+
+  
+const handleRoomClick = (room) => {
+  setSelectedRoom(room);
+  setIsOpenDetail(true);
+  
+};
+
+const BookingModal = ({ isOpen, onClose, room, currentUser }) => {
+  const [bookingData, setBookingData] = useState({
+    proposedDate: '',
+    alternativeDate: '',
+    message: ''
+  });
+  const toast = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      if (!bookingData.proposedDate) {
+        toast({
+          title: "Lỗi",
+          description: "Vui lòng chọn ngày xem phòng",
+          status: "error",
+          duration: 3000,
+          isClosable: true
+        });
+        return;
+      }
+
+      console.log('Sending booking data:', {
+        roomId: room.id,
+        landlordId: room.landlordId,
+        ...bookingData
+      });
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/booking/create`,
+        {
+          roomId: room.id,
+          landlordId: room.landlordId,
+          proposedDate: bookingData.proposedDate,
+          alternativeDate: bookingData.alternativeDate || null,
+          message: bookingData.message || ''
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.data.success) {
+        toast({
+          title: "Thành công",
+          description: (
+            <Box>
+              <Text>Đã gửi yêu cầu xem phòng</Text>
+              <Button
+                onClick={() => navigate('/tenant/bookings')}
+                size="sm"
+                mt={2}
+                colorScheme="blue"
+              >
+                Xem lịch sử đặt phòng
+              </Button>
+            </Box>
+          ),
+          status: "success",
+          duration: 5000,
+          isClosable: true
+        });
+        onClose();
+      }
+    } catch (error) {
+      console.error('Booking error:', error.response?.data || error);
+      toast({
+        title: "Lỗi",
+        description: error.response?.data?.message || "Không thể gửi yêu cầu xem phòng",
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Đặt lịch xem phòng</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Box mb={4} p={4} borderWidth={1} borderRadius="md">
+            <Heading size="sm" mb={2}>Thông tin phòng:</Heading>
+            <Text><strong>Tên phòng:</strong> {room.roomName}</Text>
+            <Text><strong>Giá thuê:</strong> {new Intl.NumberFormat("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            }).format(room.price)}</Text>
+            <Text><strong>Diện tích:</strong> {room.area}m²</Text>
+          </Box>
+
+          <VStack spacing={4}>
+            <FormControl isRequired>
+              <FormLabel>Ngày xem phòng</FormLabel>
+              <Input
+                type="datetime-local"
+                value={bookingData.proposedDate}
+                onChange={(e) => setBookingData({
+                  ...bookingData,
+                  proposedDate: e.target.value
+                })}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Ngày xem thay thế (không bắt buộc)</FormLabel>
+              <Input
+                type="datetime-local"
+                value={bookingData.alternativeDate}
+                onChange={(e) => setBookingData({
+                  ...bookingData,
+                  alternativeDate: e.target.value
+                })}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Lời nhắn</FormLabel>
+              <Textarea
+                value={bookingData.message}
+                onChange={(e) => setBookingData({
+                  ...bookingData,
+                  message: e.target.value
+                })}
+                placeholder="Nhập lời nhắn cho chủ trọ..."
+              />
+            </FormControl>
+          </VStack>
+        </ModalBody>
+        <ModalFooter>
+          <Button 
+            colorScheme="blue" 
+            mr={3} 
+            onClick={handleSubmit}
+            isLoading={isSubmitting}
+            loadingText="Đang gửi..."
+          >
+            Gửi yêu cầu
+          </Button>
+          <Button variant="ghost" onClick={onClose}>Hủy</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+  const onOpenBooking = () => setIsOpenBooking(true); // Hàm mở modal đặt lịch
+  const onCloseBooking = () => setIsOpenBooking(false);
+=======
   const BookingModal = ({ isOpen, onClose, room, currentUser }) => {
     const [bookingData, setBookingData] = useState({
       proposedDate: "",
@@ -260,6 +455,7 @@ const RoomDetail = () => {
     );
   };
   const onOpenBooking = () => setIsOpenBooking(true);
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
   const fetchLandlordInfo = async (landlordId) => {
     try {
       const response = await axios.get(
@@ -286,6 +482,8 @@ const RoomDetail = () => {
     );
   }
 
+
+  
   return (
     <Container maxW="container.xl" py={8}>
       {/* Nút Quay lại */}
@@ -297,7 +495,7 @@ const RoomDetail = () => {
       >
         Quay lại
       </Button>
-      <Box bg="white" borderRadius="lg" overflow="hidden" boxShadow="lg">
+      <Box bg="gray.100" overflow="hidden" boxShadow="lg" borderRadius={20}>
         <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6}>
           <GridItem>
             <Image
@@ -306,6 +504,7 @@ const RoomDetail = () => {
               w="100%"
               h="500px"
               objectFit="cover"
+              borderRadius={20}
             />
           </GridItem>
 
@@ -366,10 +565,9 @@ const RoomDetail = () => {
                 </List>
               </Box>
 
-              <Flex gap={4}>
+              <Flex gap={4} ml={25}>
                 <Button
-                  colorScheme="teal"
-                  size="lg"
+                  colorScheme="teal"                  
                   onClick={async () => {
                     if (currentUser) {
                       await fetchLandlordInfo(room.landlordId);
@@ -408,6 +606,14 @@ const RoomDetail = () => {
                   Đặt lịch xem phòng
                 </Button>
               </Flex>
+              {isOpenBooking && (
+              <BookingModal
+                isOpen={isOpenBooking}
+                onClose={onCloseBooking}
+                room={room} // Truyền thông tin phòng vào modal
+                currentUser={currentUser}
+              />
+            )}
             </VStack>
           </GridItem>
         </Grid>

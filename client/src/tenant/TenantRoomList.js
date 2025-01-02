@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import React, { useState, useEffect, useCallback } from "react";
+=======
 import React, { useState, useEffect } from "react";
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 import axios from "axios";
 import {
   Box,
@@ -47,7 +51,12 @@ import { FaArrowLeft } from "react-icons/fa";
 import { MdCheckCircle } from "react-icons/md";
 import Chat from "../components/Chat";
 import { jwtDecode } from "jwt-decode";
+<<<<<<< HEAD
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { debounce } from "lodash";
+=======
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 
 const TenantRoomList = () => {
   const [rooms, setRooms] = useState([]);
@@ -69,7 +78,7 @@ const TenantRoomList = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [landlordInfo, setLandlordInfo] = useState(null);
-
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const FilterForm = () => (
     <VStack
       spacing={2}
@@ -94,20 +103,34 @@ const TenantRoomList = () => {
           onChange={handleSearchChange}
           bg="white"
           _hover={{ borderColor: "blue.500" }}
+<<<<<<< HEAD
+        />
+      </HStack>
+      <Select
+        value={filterCity}
+=======
           autoFocus
         />
       </HStack>
       <Select
         value={filterCity} // Hiển thị giá trị đã chọn
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         onChange={handleCityChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
       >
+<<<<<<< HEAD
+        {!filterCity && <option value="">Chọn thành phố</option>}
+        {Array.from(new Set(rooms.map((room) => room.address.split(", ")[3])))
+          .filter((city) => city)
+          .sort()
+=======
         {!filterCity && <option value="">Chọn thành phố</option>}{" "}
         {/* Hiển thị option "Chọn thành phố" nếu chưa chọn */}
         {Array.from(new Set(rooms.map((room) => room.address.split(", ")[3])))
           .filter((city) => city) // Lọc bỏ giá trị null/undefined
           .sort() // Sắp xếp theo alphabet
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
           .map((city) => (
             <option key={city} value={city}>
               {city}
@@ -116,12 +139,30 @@ const TenantRoomList = () => {
       </Select>
 
       <Select
+<<<<<<< HEAD
+        value={filterDistrict}
+=======
         value={filterDistrict} // Hiển thị giá trị đã chọn
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         onChange={handleDistrictChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
-        isDisabled={!filterCity} // Disable nếu chưa chọn thành phố
+        isDisabled={!filterCity}
       >
+<<<<<<< HEAD
+        {!filterDistrict && <option value="">Chọn quận</option>}
+        {Array.from(
+          new Set(
+            rooms
+              .filter((room) =>
+                !filterCity || room.address.includes(filterCity)
+              )
+              .map((room) => room.address.split(", ")[2])
+          )
+        )
+          .filter((district) => district)
+          .sort()
+=======
         {!filterDistrict && <option value="">Chọn quận</option>}{" "}
         {/* Hiển thị option "Chọn quận" nếu chưa chọn */}
         {Array.from(
@@ -135,6 +176,7 @@ const TenantRoomList = () => {
         )
           .filter((district) => district) // Lọc bỏ giá trị null/undefined
           .sort() // Sắp xếp theo alphabet
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
           .map((district) => (
             <option key={district} value={district}>
               {district}
@@ -143,13 +185,21 @@ const TenantRoomList = () => {
       </Select>
 
       <Select
+<<<<<<< HEAD
+        value={priceRange}
+=======
         value={priceRange} // Hiển thị giá trị đã chọn
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         onChange={handlePriceRangeChange}
         bg="white"
         _hover={{ borderColor: "blue.500" }}
       >
+<<<<<<< HEAD
+        {!priceRange && <option value="">Chọn khoảng giá</option>}
+=======
         {!priceRange && <option value="">Chọn khoảng giá</option>}{" "}
         {/* Hiển thị option "Chọn khoảng giá" nếu chưa chọn */}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         <option value="500000-1000000">500.000đ - 1.000.000đ</option>
         <option value="1000000-3000000">1.000.000đ - 3.000.000đ</option>
         <option value="3000000-6000000">3.000.000đ - 6.000.000đ</option>
@@ -158,7 +208,10 @@ const TenantRoomList = () => {
         <option value="12000000-20000000">12.000.000đ - 20.000.000đ</option>
       </Select>
 
+<<<<<<< HEAD
+=======
       {/* Nút reset filter */}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
       {(searchTerm || filterCity || filterDistrict || priceRange) && (
         <Button
           colorScheme="red"
@@ -177,8 +230,17 @@ const TenantRoomList = () => {
     </VStack>
   );
 
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setDebouncedSearchTerm(value);
+    }, 300), // 300ms trì hoãn
+    []
+  );
+
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedSearch(value); // Gọi debounce thay vì xử lý ngay
   };
 
   const handleCityChange = (e) => {
@@ -202,6 +264,14 @@ const TenantRoomList = () => {
     const newPriceRange = e.target.value;
     setPriceRange(newPriceRange);
   };
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      // Thực hiện logic lọc/sắp xếp khi giá trị debounce thay đổi
+      console.log("Đang tìm kiếm:", debouncedSearchTerm);
+    }
+  }, [debouncedSearchTerm]);
+
 
   const handleAddressChange = (e) => {
     setFilterAddress(e.target.value);
@@ -546,6 +616,16 @@ const TenantRoomList = () => {
   };
 
   return (
+<<<<<<< HEAD
+    <Flex 
+      direction="column" // Thay đổi hướng thành cột để chứa nút và container
+      alignItems="stretch"
+    >
+    <Flex 
+        alignItems="center" 
+        justifyContent="space-between" 
+        mb={4} 
+=======
     <Flex
       direction="column" // Thay đổi hướng thành cột để chứa nút và container
       alignItems="stretch"
@@ -554,6 +634,7 @@ const TenantRoomList = () => {
         alignItems="center"
         justifyContent="space-between"
         mb={4}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
         flexWrap="wrap" // Cho phép các phần tử xếp chồng lên nhau khi cần
       >
         <Button
@@ -757,6 +838,58 @@ const TenantRoomList = () => {
           )}
         </Grid>
 
+<<<<<<< HEAD
+
+      <Modal
+        isOpen={isOpenDetail}
+        onClose={() => setIsOpenDetail(false)}
+        size={{ base: "full", md: "xl" }}  // Responsive size
+        isCentered  // Căn giữa modal
+      >
+        <ModalOverlay />
+        <ModalContent
+          mx={{ base: "4", md: "auto" }}  
+          my={{ base: "4", md: "auto" }}  
+          maxH={{ base: "100vh", md: "90vh" }}  
+          overflow="auto"  // Cho phép scroll nếu nội dung dài
+         >
+          <ModalHeader>Chi tiết phòng</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {selectedRoom && (
+              <VStack spacing={4}>
+                <Text 
+                  fontSize="xl" 
+                  fontWeight="bold"
+                >
+                  {selectedRoom.roomTitle}
+                </Text> {/* Thêm tiêu đề phòng ở đây */}
+                <Image
+                  src={selectedRoom.image}
+                  alt={selectedRoom.roomName}
+                  w="100%"
+                  h="300px"
+                  objectFit="cover"
+                  borderRadius={{ base: "20px", lg: "20px" }}
+                />
+                
+                <Button
+                  colorScheme="yellow"
+                  width="100%"
+                  onClick={() => {
+                    navigate(`/tenant/room-detail/${selectedRoom.id}`, { // Sử dụng đường dẫn mới
+                      state: { roomData: selectedRoom },
+                    });
+                  }}
+                >
+                  Xem chi tiết
+                </Button>
+                <Flex direction={{ base: "column", md: "row" }} gap={6} width="100%">
+                  <VStack
+                    align="stretch"
+                    spacing={4}
+                    w={{ base: "100%", md: "100%" }}
+=======
         <Modal
           isOpen={isOpenDetail}
           onClose={() => setIsOpenDetail(false)}
@@ -792,6 +925,7 @@ const TenantRoomList = () => {
                         state: { roomData: selectedRoom },
                       });
                     }}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
                   >
                     Xem chi tiết
                   </Button>
@@ -812,16 +946,97 @@ const TenantRoomList = () => {
                     <Box>
                       <Text fontWeight="bold">Diện tích:</Text>
                       <Text color="gray.600">{selectedRoom.area} m²</Text>
-                    </Box>
+                    </Box> */}
                     <Box>
-                      <Text fontWeight="bold">Giá thuê:</Text>
+                      <Text  fontWeight="bold">Giá thuê:</Text>
                       <Text color="gray.600">
                         {new Intl.NumberFormat("vi-VN", {
                           style: "currency",
                           currency: "VND",
                         }).format(selectedRoom.price)}
                       </Text>
+<<<<<<< HEAD
+                    </Box>
+                    {/* <Box>
+                      <Text fontWeight="bold">Đặt cọc:</Text>
+                      <Text color="gray.600">
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(selectedRoom.deposit)}
+                      </Text>
                     </Box> */}
+                    <Box>
+                      <Text fontWeight="bold">Tiện ích:</Text>
+                      <List spacing={2}>
+                        {selectedRoom.amenities.map((amenity, index) => (
+                          <ListItem key={index} color="gray.600">
+                            <ListIcon as={MdCheckCircle} color="green.500" />
+                            {amenity}
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
+                  </VStack>
+                </Flex>
+              </VStack>
+            )}
+          </ModalBody>
+          <ModalFooter>
+          <Flex width="100%" justifyContent="center">
+            <Button
+              colorScheme="red"
+              onClick={() => setIsOpenDetail(false)}
+            >
+              Đóng
+            </Button>
+          </Flex>
+              {/* <Button
+                colorScheme="teal"
+                onClick={async () => {
+                  if (currentUser) {
+                    await fetchLandlordInfo(selectedRoom.landlordId);
+                    setShowChat(true);
+                    setIsOpenDetail(false);
+                  } else {
+                    toast({
+                      title: "Vui lòng đăng nhập",
+                      description: "Bạn cần đăng nhập để chat với chủ trọ",
+                      status: "warning",
+                      duration: 3000,
+                      isClosable: true,
+                    });
+                  }
+                }}
+              >
+                Liên hệ chủ trọ
+              </Button>
+              <Button
+                colorScheme="blue"
+                onClick={() => {
+                  if (currentUser) {
+                    setIsOpenDetail(false);
+                    onOpenBooking();
+                  } else {
+                    toast({
+                      title: "Vui lòng đăng nhập",
+                      description: "Bạn cần đăng nhập để đặt lịch xem phòng",
+                      status: "warning",
+                      duration: 3000,
+                      isClosable: true,
+                    });
+                  }
+                }}
+              >
+                Đặt lịch xem phòng
+              </Button> */}
+           
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+=======
+                    </Box> */}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 
                       <Box>
                         <Text fontWeight="bold">Đặt cọc:</Text>

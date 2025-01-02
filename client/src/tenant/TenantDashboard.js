@@ -300,9 +300,41 @@ function TenantDashboard() {
   };
 
   // Xử lý khi chọn phòng
+<<<<<<< HEAD
+  const handleRoomClick = async (roomId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/user/rooms/${roomId}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      if (response.data.success) {
+        setSelectedRoom(response.data.data); // Gán thông tin phòng vào state
+      } else {
+        toast({
+          title: "Lỗi",
+          description: "Không thể tải thông tin phòng",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching room detail:", error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể tải thông tin phòng",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+=======
   const handleRoomClick = (room) => {
     setSelectedRoom(room);
     setIsOpenDetail(true);
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
   };
 
   const handleCategoryClick = (categoryName) => {
@@ -380,7 +412,24 @@ function TenantDashboard() {
         <Banner />
       </Box>
 
+<<<<<<< HEAD
+      {/* Hiển thị thông tin phòng đã chọn nếu có */}
+      {selectedRoom && (
+        <Box>
+          <Heading size="lg">Thông tin phòng đã chọn:</Heading>
+          <Text fontWeight="bold">Tên phòng: {selectedRoom.category}</Text>
+          <Text>Địa chỉ: {selectedRoom.address}</Text>
+          <Text>Giá: {selectedRoom.price}</Text>
+          <Text>Diện tích: {selectedRoom.area}</Text>
+          <Text>Đặt cọc: {selectedRoom.deposit}</Text>
+          <Text>Tiện ích: {selectedRoom.amenities.join(", ")}</Text>
+        </Box>
+      )}
+
+      <Heading size="lg" >Danh sách phòng</Heading>
+=======
       <Heading size="lg">Danh sách phòng</Heading>
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
 
       {/* Carousel */}
       <Flex
@@ -448,6 +497,14 @@ function TenantDashboard() {
                 fallbackSrc="https://via.placeholder.com/200"
                 borderRadius={{ base: "8px", lg: "8px" }}
               />
+<<<<<<< HEAD
+              <VStack p={4} align="stretch" spacing={2}>
+                <Text fontWeight="bold" fontSize="lg" noOfLines={1}>
+                  {room.roomTitle}
+                </Text>
+                <Flex justifyContent="space-between" alignItems="center" mt="2">
+                  <Text fontWeight="bold">Tình trạng: </Text>
+=======
               <VStack p={4} align="stretch" spacing={2} flex="1">
                 <Text
                   fontWeight="bold"
@@ -470,6 +527,7 @@ function TenantDashboard() {
            </Flex> */}
                 <Flex justifyContent="space-between" alignItems="center">
                   <Text fontWeight="bold">Tình trạng:</Text>
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
                   <Tag
                     colorScheme={room.status === "Còn trống" ? "green" : "red"}
                   >
@@ -632,67 +690,6 @@ function TenantDashboard() {
       </Modal>
       {/* Modal */}
 
-      {/* <VStack spacing={10} align="center" p={4} w="100%">
-     
-      <Flex overflow="hidden" mb={10} w="100%" justifyContent="center" >
-        <Flex as={motion.div} whileTap={{ cursor: "grabbing" }} w="100%" overflowX="auto">
-          {categories.map((category, index) => (
-            <Box key={index} p={4} minW="200px" textAlign="center" onClick={() => handleCategoryClick(category.name)}>
-              <Image src={category.image} alt={category.name} boxSize="150px" objectFit="cover" />
-              <Text mt={2} fontWeight="bold">{category.name}</Text>
-            </Box>
-          ))}
-        </Flex>
-      </Flex>
-
-     
-      {selectedCategory && (
-        <Box w="100%">
-          <Heading size="md" mb={4}>Phòng tại {selectedCategory}</Heading>
-          {filteredRooms.map((room, index) => (
-            <Box key={index} p={4} mb={4} bg="white" borderRadius="lg" boxShadow="lg">
-              <Image src={room.image} alt="Room" w="100%" h="200px" objectFit="cover" borderRadius="md" />
-              <Text fontWeight="bold" mt={4}>Địa chỉ:</Text>
-              <Text>{room.address}</Text>
-              <Text fontWeight="bold" mt={2}>Diện tích:</Text>
-              <Text>{room.area}</Text>
-              <Text fontWeight="bold" mt={2}>Giá thuê:</Text>
-              <Text>{room.price}</Text>
-              <Text fontWeight="bold" mt={2}>Đặt cọc:</Text>
-              <Text>{room.deposit}</Text>
-              <Text fontWeight="bold" mt={2}>Tiện ích:</Text>
-              <VStack align="start" spacing={1}>
-                {room.amenities.map((amenity, idx) => (
-                  <Text key={idx}>- {amenity}</Text>
-                ))}
-              </VStack>
-            </Box>
-          ))}
-        </Box>
-      )}
-    </VStack> */}
-
-      {/* Danh mục */}
-      {/* <Flex overflow="hidden" mb={10} w="100%" justifyContent="center">
-          <Flex as={motion.div} whileTap={{ cursor: "grabbing" }} w="100%" overflowX="auto" justifyContent="center">
-            {categories.map((category, index) => (
-              <Box 
-                key={index} 
-                p={4} 
-                minW="200px" 
-                textAlign="center" 
-                onClick={() => handleCategoryClick(category.name)}
-                borderRadius="md" 
-                boxShadow="md" 
-                transition="transform 0.2s" 
-                _hover={{ transform: "scale(1.05)", boxShadow: "lg" }} // Hiệu ứng hover
-              >
-                <Image src={category.image} alt={category.name} boxSize="150px" objectFit="cover" borderRadius="md" />
-                <Text mt={2} fontWeight="bold">{category.name}</Text>
-              </Box>
-            ))}
-          </Flex>
-        </Flex> */}
 
       {/* RoomList button */}
       <Box display="flex" justifyContent="center" mb={20}>
@@ -813,6 +810,8 @@ function TenantDashboard() {
                       </Text>
                     </Box> */}
 
+<<<<<<< HEAD
+=======
                     <Box>
                       <Text fontWeight="bold">Đặt cọc:</Text>
                       <Text color="gray.600">
@@ -895,6 +894,7 @@ function TenantDashboard() {
               transition="transform 0.2s" />
         ))}
       </Grid> */}
+>>>>>>> 052174f3d35adcef1b69ad8f3ca58ef13571e8e9
     </VStack>
   );
 }
