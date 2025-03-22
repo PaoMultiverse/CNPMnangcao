@@ -60,13 +60,12 @@ const AuthForm = () => {
   const [apiMessage, setApiMessage] = useState("");
   const [apiLogInMessage, setApiLogInMessage] = useState("");
   const [otp, setOtp] = useState("");
-  const [isOtpValid, setIsOtpValid] = useState(true); // To track if the OTP is valid
+  const [isOtpValid, setIsOtpValid] = useState(true);
   const [canResend, setCanResend] = useState(false);
   const [remainingTime, setRemainingTime] = useState(60);
   useEffect(() => {
     setSigninIn(location.pathname === "/login");
 
-    // Load saved formData from localStorage
     const savedFormData = JSON.parse(localStorage.getItem("formData"));
 
     if (savedFormData) {
@@ -223,15 +222,6 @@ const AuthForm = () => {
       data.append("role", registerFormData.role);
       data.append("password", registerFormData.password);
 
-      console.log("Sending data:", {
-        name: registerFormData.name,
-        email: registerFormData.email,
-        numPhone: registerFormData.numPhone,
-        gender: registerFormData.gender,
-        role: registerFormData.role,
-        password: registerFormData.password,
-      });
-
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_API}/auth/register`,
@@ -242,7 +232,7 @@ const AuthForm = () => {
             },
           }
         );
-        console.log("Response:", response.data);
+
         onOpen();
         setApiMessage("Tạo tài khoản thành công!");
         setIsError(false);
@@ -706,7 +696,6 @@ const AuthForm = () => {
                   </Flex>
 
                   <ModalCloseButton />
-                  {/* Display API Error Message */}
                   {isOtpMessage && (
                     <Alert
                       status={isOtpValid ? "error" : "success"}

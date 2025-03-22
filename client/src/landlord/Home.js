@@ -46,7 +46,7 @@ import { FaMoneyCheckDollar } from "react-icons/fa6";
 import { MdOutlineMeetingRoom } from "react-icons/md";
 import { RiParentFill } from "react-icons/ri";
 import { jwtDecode } from "jwt-decode";
-
+import { menuItems } from "../../src/utils/menuFactory";
 function HomeLayout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [hasNewNotification, setHasNewNotification] = useState(true);
@@ -70,39 +70,7 @@ function HomeLayout() {
     navigate(`/landlord/profile-page`);
     onClose();
   };
-  const menuItems = [
-    { name: "Trang chủ", path: "/landlord", icon: <IoHomeSharp /> },
-    {
-      name: "Quản lý cơ sở",
-      path: "/landlord/hostel-management",
-      icon: <FaBuilding />,
-    },
-    {
-      name: "Quản lý yêu cầu thuê phòng",
-      path: "/landlord/rental-request",
-      icon: <MdOutlineMeetingRoom />,
-    },
-    {
-      name: "Danh sách khách thuê",
-      path: "/landlord/tenant-list",
-      icon: <FaAddressCard />,
-    },
-    {
-      name: "Danh sách thanh toán",
-      path: "/landlord/payment-list",
-      icon: <FaMoneyCheckDollar />,
-    },
-    {
-      name: "Thống kê doanh thu",
-      path: "/landlord/revenue-stats",
-      icon: <FaChartLine />,
-    },
-    {
-      name: "Quản lý tin nhắn",
-      path: "/landlord/messages",
-      icon: <ChatIcon />,
-    },
-  ];
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
