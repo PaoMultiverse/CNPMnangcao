@@ -10,6 +10,46 @@ const moment = require("moment");
 const crypto = require("crypto");
 const Notification = require("../models/notification.model");
 const Room = require("../models/room.model");
+const PaymentContext = require("../strategies/PaymentContext");
+const PayPalPayment = require("../strategies/PayPalPayment");
+const VNPayPayment = require("../strategies/VNPayPayment");
+
+exports.createRentPayment = async (req, res) => {
+  const { paymentMethod } = req.body;
+
+  let strategy;
+  if (paymentMethod === "PAYPAL") {
+    strategy = new PayPalPayment();
+  } else if (paymentMethod === "VNPAY") {
+    strategy = new VNPayPayment();
+  } else {
+    return res
+      .status(400)
+      .json({ success: false, message: "Phương thức thanh toán không hợp lệ" });
+  }
+
+  const paymentContext = new PaymentContext(strategy);
+  return paymentContext.createPayment(req, res);
+};
+
+exports.executeRentPayment = async (req, res) => {
+  const { method } = req.query;
+
+  let strategy;
+  if (method === "PAYPAL") {
+    strategy = new PayPalPayment();
+  } else if (method === "VNPAY") {
+    strategy = new VNPayPayment();
+  } else {
+    return res
+      .status(400)
+      .json({ success: false, message: "Phương thức thanh toán không hợp lệ" });
+  }
+
+  const paymentContext = new PaymentContext(strategy);
+  return paymentContext.executePayment(req, res);
+};
+
 // Hàm tạo thanh toán tiền thuê
 exports.createRentPayment = async (req, res) => {
   const { rentFee, electricityFee, waterFee, serviceFee, billId } = req.body;

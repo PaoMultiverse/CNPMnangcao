@@ -1,15 +1,10 @@
-const verify = require("jsonwebtoken/verify");
-const mongoose = require("mongoose");
+const ModelFactory = require("../factories/modelFactory");
 
-const userSchema = new mongoose.Schema({
+const userSchema = {
   name: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   numPhone: { type: String, required: true },
-  gender: {
-    type: String,
-    enum: ["female", "male"],
-    required: true,
-  },
+  gender: { type: String, enum: ["female", "male"], required: true },
   password: { type: String, required: true },
   role: {
     type: String,
@@ -23,10 +18,10 @@ const userSchema = new mongoose.Schema({
   is_verified: { type: Boolean, required: true, default: false },
   imageUrl: {
     type: String,
-    required: false,
     default:
       "https://asset.cloudinary.com/cnpmnc/17da4fe9a04710f6b649531eef6c33e4",
   },
-});
+};
 
-module.exports = mongoose.model(`User`, userSchema);
+const User = ModelFactory.createModel("User", userSchema);
+module.exports = User;
