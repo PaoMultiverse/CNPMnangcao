@@ -104,7 +104,7 @@ function TenantHome() {
   // Cập nhật menu items cho Tenant
   const menuItems = [
     {
-      name: "Thông tin hợp đồng",
+      name: "Danh sách phòng đã thuê",
       path: "contract",
       icon: <FaFileInvoiceDollar />,
     },
@@ -310,7 +310,14 @@ function TenantHome() {
       </GridItem>
 
       {/* Footer */}
-      <GridItem as="footer" area="footer" w="100%" bg="gray.500" color="white">
+      <GridItem
+        as="footer"
+        area="footer"
+        w="100%"
+        mt={"auto"}
+        bg="gray.500"
+        color="white"
+      >
         <Box maxW="1200px" mx="auto" py={10} px={{ base: 4, md: 6 }}>
           <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={8}>
             {/* Thông tin liên hệ */}

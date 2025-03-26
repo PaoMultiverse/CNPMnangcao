@@ -40,8 +40,8 @@ const Banner = () => {
     <Container maxW="container.xl" px={{ base: 4, lg: 0 }}>
       <Box
         maxH={{ base: "auto", lg: "640px" }}
-        mb={{ base: 8, xl: 24 }}
-        position={{ base: "relative", lg: "static" }}
+        mt={{ base: 4, xl: 12 }}
+        mb={{ base: 8, xl: 12 }}
       >
         <Flex
           direction={{ base: "column", lg: "row" }}
@@ -53,12 +53,11 @@ const Banner = () => {
             alignItems={{ base: "center", lg: "flex-start" }}
             textAlign={{ base: "center", lg: "left" }}
             justifyContent="center"
-            flex="2"
+            flex="1"
             px={{ base: 4, lg: 0 }}
-            ml={{ lg: 8, xl: "135px" }}
             bgColor="none"
             order={{ base: 2, lg: 0 }}
-            position={{ base: "relative", lg: "static" }}
+            position={"sticky"}
             zIndex={{ base: 2, lg: "auto" }}
           >
             <Heading
@@ -106,9 +105,9 @@ const Banner = () => {
           <Box
             display="flex"
             flex="1"
-            position={{ base: "absolute", lg: "relative" }}
             overflow="hidden"
-            h={{ base: "100%", md: "400px", lg: "auto" }}
+            h={{ base: "200px", md: "400px" }}
+            _loading={"lazy"}
             order={{ base: 1, lg: 1 }}
             top={{ base: 0, lg: "auto" }}
             left={{ base: 0, lg: "auto" }}

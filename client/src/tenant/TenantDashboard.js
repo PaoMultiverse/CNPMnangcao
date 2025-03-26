@@ -374,7 +374,7 @@ function TenantDashboard() {
     setShowChat(false);
   };
   return (
-    <VStack spacing={10} align="center" p={4} w="100%">
+    <VStack mx={"auto"} spacing={10} align="center">
       {/* Banner Section */}
       <Box mb={20}>
         <Banner />
@@ -420,16 +420,32 @@ function TenantDashboard() {
           as={motion.div}
           w="100%"
           display="flex"
-          gap={4}
+          gap={{
+            base: 2,
+            md: 4,
+            lg: 6,
+          }} /* Khoảng cách thay đổi theo màn hình */
           transform={`translateX(-${currentSlide * 100}%)`}
           transition="transform 0.5s ease-in-out"
         >
           {rooms.map((room, index) => (
             <Box
               key={index}
-              flex="0 0 33.333%"
-              maxW="33.333%"
-              p={4}
+              flex={{
+                base: "0 0 100%" /* Mobile: chiếm toàn bộ chiều rộng */,
+                sm: "0 0 50%" /* Tablet: chiếm 50% */,
+                md: "0 0 33.333%" /* Desktop: chiếm 33.333% */,
+              }}
+              maxW={{
+                base: "100%" /* Mobile: chiều rộng 100% */,
+                sm: "50%",
+                md: "33.333%",
+              }}
+              p={{
+                base: 2,
+                sm: 3,
+                md: 4,
+              }} /* Padding điều chỉnh theo kích thước màn hình */
               bg="white"
               borderWidth="1px"
               borderRadius="lg"
@@ -443,16 +459,21 @@ function TenantDashboard() {
                 src={room.image}
                 alt={room.roomName}
                 w="100%"
-                h="200px"
+                h={{
+                  base: "150px",
+                  sm: "180px",
+                  md: "200px",
+                }} /* Điều chỉnh chiều cao hình ảnh */
                 objectFit="cover"
                 fallbackSrc="https://via.placeholder.com/200"
                 borderRadius={{ base: "8px", lg: "8px" }}
               />
-              <VStack p={4} align="stretch" spacing={2} flex="1">
+
+              <VStack p={4} align="start" spacing={2}>
                 <Text
                   fontWeight="bold"
-                  fontSize="lg"
-                  noOfLines={1} // Giới hạn tiêu đề 1 dòng
+                  fontSize={{ base: "md", md: "lg" }}
+                  noOfLines={1}
                 >
                   {room.roomTitle}
                 </Text>
@@ -694,18 +715,21 @@ function TenantDashboard() {
           </Flex>
         </Flex> */}
 
+
       {/* RoomList button */}
       <Box display="flex" justifyContent="center" mb={20}>
         <Button
           size="lg"
           height="60px"
           width={{ base: "90%", md: "300px" }}
-          bg="orange.400"
+          bg="brand.500"
+          textColor={"white"}
           onClick={() => navigate("room-list")}
           fontSize="xl"
           _hover={{
             transform: "translateY(-2px)",
             boxShadow: "xl",
+            bgColor: "brand.600",
           }}
           transition="all 0.2s"
         >

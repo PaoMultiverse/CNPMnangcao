@@ -104,7 +104,14 @@ function TenantContract() {
           Quay lại
         </Button>
       </Flex>
-      <Text fontSize="2xl" fontWeight="bold" textAlign="center" flex="1" mx={4}>
+      <Text
+        textColor={"brand.700"}
+        fontSize={{ base: "2xl", md: "3xl" }}
+        fontWeight="bold"
+        textAlign="center"
+        flex="1"
+        my={4}
+      >
         Danh sách hợp đồng
       </Text>
       {isLoading ? (
@@ -113,7 +120,6 @@ function TenantContract() {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Mã hợp đồng</Th>
               <Th>Tên phòng</Th>
               <Th>Địa chỉ</Th>
               <Th>Chủ trọ</Th>
@@ -131,7 +137,6 @@ function TenantContract() {
             {contracts && contracts.length > 0 ? (
               contracts.map((contract) => (
                 <Tr key={contract._id}>
-                  <Td>{contract._id}</Td>
                   <Td>{contract.roomName}</Td>
                   <Td>{contract.address}</Td>
                   <Td>
@@ -148,7 +153,9 @@ function TenantContract() {
                   <Td>
                     <Tag colorScheme={getStatusColor(contract.status)}>
                       {contract.status === "active"
-                        ? "Đang hiệu lực"
+
+                        ? "Còn hiệu lực"
+              
                         : contract.status === "expired"
                         ? "Hết hạn"
                         : "Chưa bắt đầu"}
