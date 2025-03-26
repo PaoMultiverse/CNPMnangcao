@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-
+import axios from "axios";
 class AuthService {
   static instance = null;
   token = localStorage.getItem("token") || null;
@@ -23,9 +23,25 @@ class AuthService {
     }
   }
 
-  login(token) {
-    this.token = token;
-    localStorage.setItem("token", token);
+  async login(email, password) {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/auth/login`,
+        { email, password }
+      );
+
+      const token = response.data.token;
+      this.token = token;
+      localStorage.setItem("token", token);
+
+      return token;
+    } catch (error) {
+      console.error(
+        "Login failed:",
+        error.response?.data?.message || error.message
+      );
+      throw new Error(error.response?.data?.message || "Đăng nhập thất bại!");
+    }
   }
 
   logout() {
