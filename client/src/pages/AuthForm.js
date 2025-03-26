@@ -171,7 +171,7 @@ const AuthForm = () => {
 
     if (role === "tenant") {
       navigate(`/tenant`);
-    } else if (role === "landlord" || role === "manager") {
+    } else if (role === "landlord") {
       navigate(`/landlord`);
     } else if (role === "admin") {
       navigate("/admin");
@@ -183,7 +183,6 @@ const AuthForm = () => {
     if (validateForm()) {
       const email = loginFormData.email;
       const password = loginFormData.password;
-
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_API}/auth/login`,
