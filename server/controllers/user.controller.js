@@ -6,6 +6,8 @@ const { use } = require("../configs/email.config");
 const Hostel = require("../models/hostel.model");
 const Room = require("../models/room.model");
 const Contracts = require("../models/contracts.model");
+const userService = require("../services/user.service");
+
 //Lấy toàn bộ User
 const getUser = async (req, res) => {
   try {
@@ -20,7 +22,7 @@ const getUserById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const user = await User.findById(id);
+    const user = await userService.getUserById(id);
     res.status(200).json({ success: true, data: user });
   } catch (error) {
     res.status(200).json({ success: false, message: error.message });
@@ -157,7 +159,7 @@ const changePassword = async (req, res) => {
 const getAllRooms = async (req, res) => {
   try {
     console.log("Fetching all rooms...");
-    
+
     // Lấy tất cả phòng có status là available
     const rooms = await Room.find({ status: "available" })
       .populate({
@@ -165,10 +167,12 @@ const getAllRooms = async (req, res) => {
         select: "name address district city ward landlordId imageUrl",
         populate: {
           path: "landlordId",
-          select: "name email numPhone"
-        }
+          select: "name email numPhone",
+        },
       })
-      .select("roomTitle roomName images status price area description deposit");
+      .select(
+        "roomTitle roomName images status price area description deposit"
+      );
 
     console.log("Found rooms:", rooms);
 
@@ -177,48 +181,47 @@ const getAllRooms = async (req, res) => {
       console.log("No rooms found");
       return res.status(200).json({
         success: true,
-        data: []
+        data: [],
       });
     }
 
     // Format dữ liệu trả về với kiểm tra null
-    const formattedRooms = rooms.map(room => {
+    const formattedRooms = rooms.map((room) => {
       // Kiểm tra null cho hostelId
       const hostel = room.hostelId || {};
-      
+
       return {
         _id: room._id,
-        roomTitle: room.roomTitle || '',
-        roomName: room.roomName || '',
+        roomTitle: room.roomTitle || "",
+        roomName: room.roomName || "",
         hostelId: {
-          _id: hostel._id || '',
-          name: hostel.name || '',
-          address: hostel.address || '',
-          district: hostel.district || '',
-          city: hostel.city || '',
-          ward: hostel.ward || '',
-          landlordId: hostel.landlordId || '',
-          imageUrl: hostel.imageUrl || ''
+          _id: hostel._id || "",
+          name: hostel.name || "",
+          address: hostel.address || "",
+          district: hostel.district || "",
+          city: hostel.city || "",
+          ward: hostel.ward || "",
+          landlordId: hostel.landlordId || "",
+          imageUrl: hostel.imageUrl || "",
         },
         images: room.images || [],
-        status: room.status || 'unknown',
+        status: room.status || "unknown",
         price: room.price || 0,
         area: room.area || 0,
-        description: room.description || '',
-        deposit: room.deposit || 0
+        description: room.description || "",
+        deposit: room.deposit || 0,
       };
     });
 
     res.status(200).json({
       success: true,
-      data: formattedRooms
+      data: formattedRooms,
     });
-
   } catch (error) {
     console.error("Error in getAllRooms:", error);
     res.status(500).json({
       success: false,
-      message: error.message || "Lỗi khi lấy danh sách phòng"
+      message: error.message || "Lỗi khi lấy danh sách phòng",
     });
   }
 };
@@ -311,52 +314,53 @@ const searchAccommodation = async (req, res) => {
   }
 };
 
-
 const getTenantContracts = async (req, res) => {
   try {
     const tenantId = req.user.id;
-    console.log('Fetching contracts for tenant:', tenantId);
+    console.log("Fetching contracts for tenant:", tenantId);
 
     const contracts = await Contracts.find({ tenantId })
       .populate({
-        path: 'roomId',
-        select: 'roomName roomTitle hostelId',
+        path: "roomId",
+        select: "roomName roomTitle hostelId",
         populate: {
-          path: 'hostelId',
-          select: 'name address ward district city'
-        }
+          path: "hostelId",
+          select: "name address ward district city",
+        },
       })
       .populate({
-        path: 'landlordId',
-        model: 'User',
-        select: 'name email numPhone'
+        path: "landlordId",
+        model: "User",
+        select: "name email numPhone",
       })
       .sort({ createdAt: -1 });
 
-    console.log('Found contracts:', contracts);
+    console.log("Found contracts:", contracts);
 
-    const formattedContracts = contracts.map(contract => {
+    const formattedContracts = contracts.map((contract) => {
       const currentDate = new Date();
       const endDate = new Date(contract.endDate);
       const startDate = new Date(contract.startDate);
-      
+
       let status;
       if (currentDate > endDate) {
-        status = 'expired';
+        status = "expired";
       } else if (currentDate >= startDate && currentDate <= endDate) {
-        status = 'active';
+        status = "active";
       } else {
-        status = 'pending';
+        status = "pending";
       }
 
       const hostelInfo = contract.roomId?.hostelId || {};
-      
+
       return {
         _id: contract._id,
-        roomName: contract.roomId?.roomName || 'N/A',
-        address: `${hostelInfo.address || ''}, ${hostelInfo.ward || ''}, ${hostelInfo.district || ''}, ${hostelInfo.city || ''}`.trim(),
-        landlordName: contract.landlordId?.name || 'N/A',
-        landlordPhone: contract.landlordId?.numPhone || 'N/A',
+        roomName: contract.roomId?.roomName || "N/A",
+        address: `${hostelInfo.address || ""}, ${hostelInfo.ward || ""}, ${
+          hostelInfo.district || ""
+        }, ${hostelInfo.city || ""}`.trim(),
+        landlordName: contract.landlordId?.name || "N/A",
+        landlordPhone: contract.landlordId?.numPhone || "N/A",
         rentFee: contract.rentFee,
         depositFee: contract.depositFee,
         electricityFee: contract.electricityFee,
@@ -364,20 +368,19 @@ const getTenantContracts = async (req, res) => {
         serviceFee: contract.serviceFee,
         startDate: contract.startDate,
         endDate: contract.endDate,
-        status
+        status,
       };
     });
 
     res.status(200).json({
       success: true,
-      data: formattedContracts
+      data: formattedContracts,
     });
-
   } catch (error) {
-    console.error('Get tenant contracts error:', error);
+    console.error("Get tenant contracts error:", error);
     res.status(500).json({
       success: false,
-      message: "Không thể lấy danh sách hợp đồng: " + error.message
+      message: "Không thể lấy danh sách hợp đồng: " + error.message,
     });
   }
 };
