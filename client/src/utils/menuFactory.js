@@ -28,7 +28,7 @@ export const menuItems = [
   ),
   createMenuItem(
     "Danh sách thanh toán",
-    "/landlord/payment-list"
+    "/landlord/payment-list",
     <FaMoneyCheckDollar />
   ),
   createMenuItem(
