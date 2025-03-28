@@ -31,7 +31,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import NavigationStrategy from "../utils/navigationStrategy";
 import authService from "../services/authService";
-
+import { formFactory } from "../utils/formFactory";
 const AuthForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -198,37 +198,7 @@ const AuthForm = () => {
       setIsLogInError(true);
     }
   };
-  // const handleLogin = async () => {
-  //   if (validateForm()) {
-  //     const email = loginFormData.email;
-  //     const password = loginFormData.password;
-  //     try {
-  //       const response = await axios.post(
-  //         `${process.env.REACT_APP_API}/auth/login`,
-  //         {
-  //           email: email,
-  //           password: password,
-  //         }
-  //       );
 
-  //       const token = response.data.token;
-
-  //       const user = jwtDecode(token);
-  //       console.log(user);
-  //       localStorage.setItem("token", token);
-  //       localStorage.setItem("role", user.role);
-
-  //       handleLoginComplete(user.role);
-
-  //       setApiLogInMessage("Đăng nhập thành công");
-  //       setIsLogInError(false);
-  //     } catch (error) {
-  //       console.log(error);
-  //       setApiLogInMessage(error.response.data.message);
-  //       setIsLogInError(true);
-  //     }
-  //   }
-  // };
   const handleLogin = async () => {
     if (validateForm()) {
       try {
@@ -246,7 +216,7 @@ const AuthForm = () => {
       }
     }
   };
-
+  // này là cũ
   // const handleRegister = async () => {
   //   if (validateForm()) {
   //     const data = new FormData();
@@ -281,15 +251,20 @@ const AuthForm = () => {
   //     }
   //   }
   // };
+
+  // này là mới
   const handleRegister = async () => {
     if (validateForm()) {
       try {
-        await authService.register(registerFormData);
-        onOpen(); // Hiển thị modal xác thực OTP
+        const response = await authService.register(registerFormData);
+
+        onOpen(); // Mở modal thông báo
         setApiMessage("Tạo tài khoản thành công!");
         setIsError(false);
+
+        console.log("Đăng ký thành công:", response); // Debug dữ liệu trả về
       } catch (error) {
-        console.error("Registration failed:", error.message);
+        console.error("Đăng ký thất bại:", error.message);
         setApiMessage(error.message);
         setIsError(true);
       }

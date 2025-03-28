@@ -6,6 +6,7 @@ const sendverificationCode = require("../middlewares/sendEmail");
 //Đăng ký, tạo user
 const createUser = async (req, res) => {
   const user = req.body;
+  console.log(user);
 
   if (
     !user ||

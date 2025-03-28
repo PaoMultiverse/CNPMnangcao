@@ -43,6 +43,32 @@ class AuthService {
       throw new Error(error.response?.data?.message || "Đăng nhập thất bại!");
     }
   }
+  async register(userData) {
+    try {
+      const data = new FormData();
+      Object.keys(userData).forEach((key) => {
+        data.append(key, userData[key]);
+      });
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/auth/register`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Registration response:", response.data);
+      return response.data; // Trả về dữ liệu từ API
+    } catch (error) {
+      console.error(
+        "Registration failed:",
+        error.response?.data || error.message
+      );
+      throw new Error(error.response?.data?.message || "Đăng ký thất bại!");
+    }
+  }
 
   logout() {
     this.token = null;
