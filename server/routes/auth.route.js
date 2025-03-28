@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   createUser,
   loginUser,
@@ -8,6 +9,7 @@ const {
   forgotPassword,
   resetPassword,
 } = require("../controllers/auth.controller");
+
 const upload = require("../middlewares/uploadImage");
 router.post("/register", upload.single("image"), createUser);
 router.post("/login", loginUser);

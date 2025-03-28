@@ -65,7 +65,7 @@ const createUser = async (req, res) => {
     landlordId: user.landlordId,
   });
   try {
-    await newUser.save();
+    await User.create(newUser);
     sendverificationCode(user.email, verificationCode);
     res.status(200).json({ success: true, data: newUser });
   } catch (error) {
