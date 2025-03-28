@@ -1,5 +1,6 @@
 class NavigationStrategy {
-  navigate(navigate, role) {
+  navigateToRole(navigate, role) {
+    console.log("Navigating to role:", role);
     const routes = {
       tenant: "/tenant",
       landlord: "/landlord",

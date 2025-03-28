@@ -11,13 +11,13 @@ const roomSchema = new mongoose.Schema({
   images: [{ type: String }],
   status: {
     type: String,
-    enum: ['available', 'occupied'],
-    default: 'available'
+    enum: ["available", "occupied"],
+    default: "available",
   },
   paymentStatus: {
     type: String,
-    enum: ['paid', 'unpaid'],
-    default: 'unpaid'
+    enum: ["paid", "unpaid"],
+    default: "unpaid",
   },
   hostelId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -34,24 +34,24 @@ const roomSchema = new mongoose.Schema({
   electricityUnitPrice: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
   },
   waterUnitPrice: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
   },
   initialElectricityReading: {
     type: Number,
-    default: 0
+    default: 0,
   },
   initialWaterReading: {
     type: Number,
-    default: 0
-  }
+    default: 0,
+  },
 });
 
-roomSchema.pre('save', function(next) {
+roomSchema.pre("save", function (next) {
   this.lastUpdated = new Date();
   next();
 });

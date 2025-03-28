@@ -29,9 +29,8 @@ import {
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import NavigationStrategy from "../utils/navigationStrategy";
 import authService from "../services/authService";
-
+// import { formFactory } from "../utils/formFactory";
 const AuthForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -84,7 +83,8 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (authService.isAuthenticated()) {
-      handleLoginComplete();
+      const user = jwtDecode(authService.token);
+      handleLoginComplete(user.role);
     }
   }, []);
 
@@ -176,77 +176,89 @@ const AuthForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // const handleLoginComplete = (e) => {
-  //   const role = e;
-
-  //   if (role === "tenant") {
-  //     navigate(`/tenant`);
-  //   } else if (role === "landlord") {
-  //     navigate(`/landlord`);
-  //   } else if (role === "admin") {
-  //     navigate("/admin");
-  //   }
-  //   onClose();
-  // };
-  const handleLoginComplete = () => {
-    const user = authService.getUser();
-    if (user) {
-      NavigationStrategy.navigate(navigate, user.role);
-    } else {
-      console.error("Login failed: No user data found");
-      setApiLogInMessage("Không thể lấy thông tin người dùng!");
-      setIsLogInError(true);
-    }
+  const handleLoginComplete = (e) => {
+    const role = e;
+    console.log(e);
+    navigate("/" + role); // Navigate to the user's role page
+    // if (role === "tenant") {
+    //   navigate(`/tenant`);
+    // } else if (role === "landlord") {
+    //   navigate(`/landlord`);
+    //   console.log("Không chuyển hướng đến trang chủ");
+    // } else if (role === "admin") {
+    //   navigate("/admin");
+    // }
+    onClose();
   };
+
+  // const handleLoginComplete = () => {
+  //   const user = authService.getUser();
+  //   const path = "/" + user.role;
+  //   console.log(path); // Debug user data
+  //   // Debug user data
+  //   if (user) {
+  //     navigate(path);
+  //     console.log("Ok"); // Navigate to the user's role page
+  //   } else {
+  //     console.error("Login failed: No user data found");
+  //     setApiLogInMessage("Không thể lấy thông tin người dùng!");
+  //     setIsLogInError(true);
+  //   }
+  // };
+
   // const handleLogin = async () => {
   //   if (validateForm()) {
-  //     const email = loginFormData.email;
-  //     const password = loginFormData.password;
   //     try {
-  //       const response = await axios.post(
-  //         `${process.env.REACT_APP_API}/auth/login`,
-  //         {
-  //           email: email,
-  //           password: password,
-  //         }
+  //       const token = await authService.login(
+  //         loginFormData.email,
+  //         loginFormData.password
   //       );
-
-  //       const token = response.data.token;
-
   //       const user = jwtDecode(token);
   //       console.log(user);
-  //       localStorage.setItem("token", token);
-  //       localStorage.setItem("role", user.role);
-
-  //       handleLoginComplete(user.role);
-
-  //       setApiLogInMessage("Đăng nhập thành công");
-  //       setIsLogInError(false);
+  //       if (token) {
+  //         handleLoginComplete(user.role);
+  //       }
   //     } catch (error) {
-  //       console.log(error);
-  //       setApiLogInMessage(error.response.data.message);
+  //       console.error("Login failed:", error.message);
+  //       setApiLogInMessage(error.message);
   //       setIsLogInError(true);
   //     }
   //   }
   // };
+
   const handleLogin = async () => {
     if (validateForm()) {
+      const email = loginFormData.email;
+      const password = loginFormData.password;
+
       try {
-        const token = await authService.login(
-          loginFormData.email,
-          loginFormData.password
+        const response = await axios.post(
+          `${process.env.REACT_APP_API}/auth/login`,
+          {
+            email: email,
+            password: password,
+          }
         );
-        if (token) {
-          handleLoginComplete();
-        }
+
+        const token = response.data.token;
+
+        const user = jwtDecode(token);
+        console.log(user);
+        localStorage.setItem("token", token);
+
+        handleLoginComplete(user.role);
+
+        setApiLogInMessage("Đăng nhập thành công");
+        setIsLogInError(false);
       } catch (error) {
-        console.error("Login failed:", error.message);
-        setApiLogInMessage(error.message);
+        console.log(error);
+        setApiLogInMessage(error.response.data.message);
         setIsLogInError(true);
       }
     }
   };
 
+  // này là cũ
   // const handleRegister = async () => {
   //   if (validateForm()) {
   //     const data = new FormData();
@@ -281,15 +293,20 @@ const AuthForm = () => {
   //     }
   //   }
   // };
+
+  // này là mới
   const handleRegister = async () => {
     if (validateForm()) {
       try {
-        await authService.register(registerFormData);
-        onOpen(); // Hiển thị modal xác thực OTP
+        const response = await authService.register(registerFormData);
+
+        onOpen(); // Mở modal thông báo
         setApiMessage("Tạo tài khoản thành công!");
         setIsError(false);
+
+        console.log("Đăng ký thành công:", response); // Debug dữ liệu trả về
       } catch (error) {
-        console.error("Registration failed:", error.message);
+        console.error("Đăng ký thất bại:", error.message);
         setApiMessage(error.message);
         setIsError(true);
       }
