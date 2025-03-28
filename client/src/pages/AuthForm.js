@@ -29,7 +29,9 @@ import {
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-
+import NavigationStrategy from "../utils/navigationStrategy";
+import authService from "../services/authService";
+import { formFactory } from "../utils/formFactory";
 const AuthForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -63,21 +65,29 @@ const AuthForm = () => {
   const [isOtpValid, setIsOtpValid] = useState(true);
   const [canResend, setCanResend] = useState(false);
   const [remainingTime, setRemainingTime] = useState(60);
+  // useEffect(() => {
+  //   setSigninIn(location.pathname === "/login");
+
+  //   const savedFormData = JSON.parse(localStorage.getItem("formData"));
+
+  //   if (savedFormData) {
+  //     if (signinIn) {
+  //       // For login
+  //       setLoginFormData(savedFormData);
+  //     } else {
+  //       // For register
+  //       setRegisterFormData(savedFormData);
+  //     }
+  //   }
+  // }
+  // , [location.pathname, signinIn]);
+
   useEffect(() => {
-    setSigninIn(location.pathname === "/login");
-
-    const savedFormData = JSON.parse(localStorage.getItem("formData"));
-
-    if (savedFormData) {
-      if (signinIn) {
-        // For login
-        setLoginFormData(savedFormData);
-      } else {
-        // For register
-        setRegisterFormData(savedFormData);
-      }
+    if (authService.isAuthenticated()) {
+      handleLoginComplete();
     }
-  }, [location.pathname, signinIn]);
+  }, []);
+
   useEffect(() => {
     if (!canResend) {
       const timer = setInterval(() => {
@@ -166,82 +176,96 @@ const AuthForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLoginComplete = (e) => {
-    const role = e;
+  // const handleLoginComplete = (e) => {
+  //   const role = e;
 
-    if (role === "tenant") {
-      navigate(`/tenant`);
-    } else if (role === "landlord" || role === "manager") {
-      navigate(`/landlord`);
-    } else if (role === "admin") {
-      navigate("/admin");
+  //   if (role === "tenant") {
+  //     navigate(`/tenant`);
+  //   } else if (role === "landlord") {
+  //     navigate(`/landlord`);
+  //   } else if (role === "admin") {
+  //     navigate("/admin");
+  //   }
+  //   onClose();
+  // };
+  const handleLoginComplete = () => {
+    const user = authService.getUser();
+    if (user) {
+      NavigationStrategy.navigate(navigate, user.role);
+    } else {
+      console.error("Login failed: No user data found");
+      setApiLogInMessage("Không thể lấy thông tin người dùng!");
+      setIsLogInError(true);
     }
-    onClose();
   };
 
   const handleLogin = async () => {
     if (validateForm()) {
-      const email = loginFormData.email;
-      const password = loginFormData.password;
-
       try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API}/auth/login`,
-          {
-            email: email,
-            password: password,
-          }
+        const token = await authService.login(
+          loginFormData.email,
+          loginFormData.password
         );
-
-        const token = response.data.token;
-
-        const user = jwtDecode(token);
-        console.log(user);
-        localStorage.setItem("token", token);
-        localStorage.setItem("role", user.role);
-
-        handleLoginComplete(user.role);
-
-        setApiLogInMessage("Đăng nhập thành công");
-        setIsLogInError(false);
+        if (token) {
+          handleLoginComplete();
+        }
       } catch (error) {
-        console.log(error);
-        setApiLogInMessage(error.response.data.message);
+        console.error("Login failed:", error.message);
+        setApiLogInMessage(error.message);
         setIsLogInError(true);
       }
     }
   };
+  // này là cũ
+  // const handleRegister = async () => {
+  //   if (validateForm()) {
+  //     const data = new FormData();
+  //     data.append("name", registerFormData.name);
+  //     data.append("email", registerFormData.email);
+  //     data.append("numPhone", registerFormData.numPhone);
+  //     data.append("gender", registerFormData.gender);
+  //     data.append("role", registerFormData.role);
+  //     data.append("password", registerFormData.password);
 
+  //     try {
+  //       const response = await axios.post(
+  //         `${process.env.REACT_APP_API}/auth/register`,
+  //         data,
+  //         {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         }
+  //       );
+
+  //       onOpen();
+  //       setApiMessage("Tạo tài khoản thành công!");
+  //       setIsError(false);
+  //     } catch (error) {
+  //       console.error(
+  //         "Registration error:",
+  //         error.response?.data || error.message
+  //       );
+  //       setApiMessage(error.response?.data?.message || "Đã xảy ra lỗi");
+  //       setIsError(true);
+  //     }
+  //   }
+  // };
+
+  // này là mới
   const handleRegister = async () => {
     if (validateForm()) {
-      const data = new FormData();
-      data.append("name", registerFormData.name);
-      data.append("email", registerFormData.email);
-      data.append("numPhone", registerFormData.numPhone);
-      data.append("gender", registerFormData.gender);
-      data.append("role", registerFormData.role);
-      data.append("password", registerFormData.password);
-
       try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API}/auth/register`,
-          data,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await authService.register(registerFormData);
 
-        onOpen();
+        onOpen(); // Mở modal thông báo
         setApiMessage("Tạo tài khoản thành công!");
         setIsError(false);
+
+        console.log("Đăng ký thành công:", response); // Debug dữ liệu trả về
       } catch (error) {
-        console.error(
-          "Registration error:",
-          error.response?.data || error.message
-        );
-        setApiMessage(error.response?.data?.message || "Đã xảy ra lỗi");
+        console.error("Đăng ký thất bại:", error.message);
+        setApiMessage(error.message);
         setIsError(true);
       }
     }

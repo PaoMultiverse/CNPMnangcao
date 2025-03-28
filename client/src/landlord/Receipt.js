@@ -31,13 +31,11 @@ const Receipt = () => {
   const toast = useToast();
   const token = localStorage.getItem("token");
 
-  // Fetch danh sách cơ sở và hóa đơn khi component mount
   useEffect(() => {
     fetchFacilities();
     fetchReceipts();
   }, [token]);
 
-  // Fetch danh sách cơ sở
   const fetchFacilities = async () => {
     const user = jwtDecode(token);
     try {

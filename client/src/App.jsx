@@ -5,12 +5,6 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import socket from "./services/socket";
 import theme from "./theme";
 import AuthForm from "./pages/AuthForm";
-import LandlordHome from "./landlord/Home";
-import HomeDashboard from "./landlord/HomeDashboard";
-import HostelManagement from "./landlord/HostelManagement";
-import RoomList from "./landlord/RoomList";
-import ProfilePage from "./landlord/Profile";
-import RentalRequest from "./landlord/RentalRequests";
 import TenantRoomList from "./tenant/TenantRoomList";
 import TenantContract from "./tenant/TenantContract";
 import TenantPayments from "./tenant/TenantPayments";
@@ -18,18 +12,26 @@ import TenantDashboard from "./tenant/TenantDashboard";
 import TenantHome from "./tenant/TenantHome";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ForgotPassword from "./pages/ForgotPassword";
-import Receipt from "./landlord/Receipt";
-import TenantList from "./landlord/TenantList";
-import RevenueStats from "./landlord/RevenueStats";
 import AdminDashboard from "./admin/AdminDashboard";
 import SearchResults from "./pages/SearchResults";
-import MessageManagement from "./landlord/MessageManagement";
 import TenantBookingManagement from "./tenant/TenantBookingManagement";
 import RoomDetail from "./tenant/RoomDetail";
 import { jwtDecode } from "jwt-decode";
 import BillList from "./tenant/BillList";
 import BillDetail from "./tenant/BillDetail";
 import TenantChatList from "./tenant/TenantChatList";
+import {
+  HomeLayout,
+  HomeDashboard,
+  HostelManagement,
+  RoomList,
+  ProfilePage,
+  MessageManagement,
+  Receipt,
+  TenantList,
+  RevenueStats,
+  RentalRequest,
+} from "./landlord";
 
 function App() {
   const toast = useToast();
@@ -142,7 +144,7 @@ function App() {
               path="/landlord"
               element={
                 <ProtectedRoute rolesRequired={["landlord", "manager"]}>
-                  <LandlordHome />
+                  <HomeLayout />
                 </ProtectedRoute>
               }
             >
