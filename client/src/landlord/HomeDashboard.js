@@ -30,6 +30,9 @@ function HomeDashboard() {
   const navigateToRentalRequests = (tabIndex) => {
     navigate(`/landlord/rental-request?tab=${tabIndex}`);
   };
+  const navigateToHostelManagement = (tabIndex) => {
+    navigate(`/landlord/hostel-management`);
+  };
 
   const hostel = [
     "Facility 1 - Address",
@@ -91,7 +94,14 @@ function HomeDashboard() {
         <Text fontSize={{ base: "md", md: "lg" }} fontWeight="bold" mb={3}>
           Danh sách các cơ sở
         </Text>
-        <VStack align="start" spacing={2} w="100%">
+        <VStack
+          align="start"
+          spacing={2}
+          w="100%"
+          onClick={() => navigateToHostelManagement()}
+          cursor="pointer"
+          _hover={{ bg: "gray.50" }}
+        >
           {hostel.map((hostel, index) => (
             <Flex key={index} align="center" gap={2}>
               <CalendarIcon color="blue.500" />

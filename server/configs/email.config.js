@@ -8,6 +8,9 @@ const transporter = nodemailer.createTransport({
     user: "tranquocbao1410@gmail.com",
     pass: `${process.env.GMAIL_PASS}`,
   },
+  tls: {
+    rejectUnauthorized: false, // Bỏ qua lỗi SSL
+  },
 });
 const sendEmail = async () => {
   try {

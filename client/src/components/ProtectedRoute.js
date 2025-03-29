@@ -1,5 +1,4 @@
 import { Navigate } from "react-router-dom";
-
 import { jwtDecode } from "jwt-decode";
 
 const isTokenExpired = (token) => {
@@ -7,27 +6,34 @@ const isTokenExpired = (token) => {
 
   try {
     const decoded = jwtDecode(token);
-    return decoded.exp * 1000 < Date.now(); // True nếu token hết hạn
+    if (!decoded.exp) return true; // Tránh lỗi nếu exp không tồn tại
+    return decoded.exp * 1000 < Date.now();
   } catch (error) {
-    return true; // Lỗi khi giải mã cũng coi như token hết hạn
+    console.error("Lỗi giải mã token:", error);
+    return true;
   }
 };
 
 const ProtectedRoute = ({ children, rolesRequired = [] }) => {
   const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
 
-  // Nếu không có token, chuyển hướng tới trang đăng nhập
   if (!token || isTokenExpired(token)) {
-    return <Navigate to="/login" />;
+    localStorage.removeItem("token"); // Xóa token hết hạn
+    return <Navigate to="/login" replace />;
   }
 
-  // Nếu vai trò người dùng không thuộc danh sách vai trò được phép
-  if (rolesRequired.length > 0 && !rolesRequired.includes(role)) {
-    return <Navigate to="/unauthorized" />; //! Cần thêm trang xử lý sai role
+  let userRole = null;
+  try {
+    const decoded = jwtDecode(token);
+    userRole = decoded.role; // Lấy role từ token
+  } catch (error) {
+    return <Navigate to="/login" replace />;
   }
 
-  // Nếu người dùng có quyền truy cập, render nội dung
+  if (rolesRequired.length > 0 && !rolesRequired.includes(userRole)) {
+    return <Navigate to="/unauthorized" replace />; //! Đảm bảo có trang /unauthorized
+  }
+
   return children;
 };
 

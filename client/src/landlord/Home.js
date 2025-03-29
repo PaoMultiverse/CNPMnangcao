@@ -188,7 +188,158 @@ function HomeLayout() {
           onClick={onOpen}
         />
       </GridItem>
+      {/* Hamburg menu */}
+      <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent textColor={"white"}>
+          <DrawerCloseButton />
+          <DrawerBody py={4} bg={"brand.800"}>
+            <VStack align="start">
+              <Flex alignItems="center" gap={2}>
+                <Avatar
+                  size="sm"
+                  name={userData.name}
+                  src="https://bit.ly/broken-link"
+                  cursor="pointer"
+                />
+                <Text textColor={"white"} fontWeight="bold">
+                  {userData.name}
+                </Text>
+              </Flex>
 
+              {menuItems.map((item) => (
+                <NavLink
+                  to={item.path}
+                  key={item.name}
+                  end
+                  onClick={() => {
+                    handleMenuClick(item.name);
+                    onClose();
+                  }}
+                  style={{ width: "100%" }}
+                >
+                  {({ isActive }) => (
+                    <Flex
+                      borderRadius={8}
+                      align="center"
+                      gap={2}
+                      padding="6px"
+                      height="50px"
+                      fontWeight="bold"
+                      marginBlock="5px"
+                      backgroundColor={isActive ? "brand.500" : "transparent"}
+                      transition="background-color 0.2s ease"
+                      _hover={{
+                        backgroundColor: isActive ? "brand.600" : "brand.700",
+                        textColor: "whitesmoke",
+                      }}
+                    >
+                      <Box as="span">{item.icon}</Box>
+                      <Text textColor={isActive ? "brand.0" : "brand.2"}>
+                        {item.name}
+                      </Text>
+                    </Flex>
+                  )}
+                </NavLink>
+              ))}
+              <Divider my={4} />
+              <Button
+                _hover={{ bgColor: "brand.700", textColor: "whitesmoke" }}
+                textColor={"brand.0"}
+                p={2}
+                variant="ghost"
+                onClick={handleEditProfile}
+                leftIcon={<EditIcon />}
+              >
+                Chỉnh sửa thông tin cá nhân
+              </Button>
+              <Button
+                _hover={{ bgColor: "brand.700", textColor: "whitesmoke" }}
+                textColor={"brand.0"}
+                p={2}
+                variant="ghost"
+                onClick={handleLogout}
+                leftIcon={<ArrowForwardIcon />}
+              >
+                Đăng xuất
+              </Button>
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+      {/* sidebar */}
+      <GridItem
+        as="nav"
+        p="2"
+        bg={"brand.800"}
+        area="nav"
+        display={{ base: "none", md: "block" }}
+        w={isNavOpen ? "300px" : "60px"}
+        transition="width 0.5s ease-in-out"
+        position="fixed"
+        h={"100%"}
+        zIndex={10}
+      >
+        <VStack align="start" spacing={4}>
+          <Flex justify="space-between" width="100%">
+            <Image
+              src="../../../eco-house.png"
+              alt="Logo"
+              boxSize="100px"
+              mx="auto"
+              transition="transform 0.7s"
+              _hover={{ transform: "scale(1.1)" }}
+              display={isNavOpen ? "block" : "none"}
+            />
+            <IconButton
+              aria-label="Toggle Nav"
+              icon={isNavOpen ? <FaChevronLeft /> : <FaChevronRight />}
+              transition="width 0.5s ease-in-out"
+              onClick={toggleNav}
+              variant="ghost"
+              _hover={{ bg: "brand.500" }}
+              textColor={"white"}
+            />
+          </Flex>
+          <Collapse in={isNavOpen}>
+            {menuItems.map((item) => (
+              <Link
+                as={NavLink}
+                to={item.path}
+                key={item.name}
+                end
+                onClick={() => {
+                  handleMenuClick(item.name);
+                  onClose();
+                }}
+                _activeLink={{
+                  bg: "#0096c7",
+                  textColor: "white",
+                }}
+                _hover={{
+                  bg: "#0077b6",
+                  textColor: "whitesmoke",
+                }}
+                marginInlineStart={"5px"}
+                marginBlock={4}
+                display="flex"
+                alignItems="center"
+                gap="8px"
+                p="6px"
+                borderRadius="5px"
+                fontSize="18px"
+                fontWeight="600"
+                height="45px"
+                textColor="brand.0"
+                transition="background-color 0.2s ease"
+              >
+                {item.icon}
+                <Text color={"inherit"}>{item.name}</Text>
+              </Link>
+            ))}
+          </Collapse>
+        </VStack>
+      </GridItem>
       {/* content */}
       <GridItem
         as="main"

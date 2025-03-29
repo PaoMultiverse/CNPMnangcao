@@ -82,9 +82,15 @@ const AuthForm = () => {
   // , [location.pathname, signinIn]);
 
   useEffect(() => {
-    if (authService.isAuthenticated()) {
-      const user = jwtDecode(authService.token);
-      handleLoginComplete(user.role);
+    if (authService.isAuthenticated() && authService.token) {
+      try {
+        const user = jwtDecode(authService.token);
+        if (user && user.role) {
+          handleLoginComplete(user.role);
+        }
+      } catch (error) {
+        console.error("JWT Decode Error:", error);
+      }
     }
   }, []);
 
@@ -109,12 +115,10 @@ const AuthForm = () => {
     const { name, value } = e.target;
 
     if (signinIn) {
-      // Update login form data
       const updatedLoginData = { ...loginFormData, [name]: value };
       setLoginFormData(updatedLoginData);
       localStorage.setItem("formData", JSON.stringify(updatedLoginData));
     } else {
-      // Update register form data
       const updatedRegisterData = { ...registerFormData, [name]: value };
       setRegisterFormData(updatedRegisterData);
       localStorage.setItem("formData", JSON.stringify(updatedRegisterData));
@@ -123,7 +127,6 @@ const AuthForm = () => {
 
   const handleFormToggle = () => {
     setSigninIn((prev) => !prev);
-    console.log("SigninIn toggled:", !signinIn);
     if (signinIn) {
       navigate("/register");
     } else {
@@ -175,19 +178,10 @@ const AuthForm = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  const handleLoginComplete = (e) => {
-    const role = e;
-    console.log(e);
-    navigate("/" + role); // Navigate to the user's role page
-    // if (role === "tenant") {
-    //   navigate(`/tenant`);
-    // } else if (role === "landlord") {
-    //   navigate(`/landlord`);
-    //   console.log("Không chuyển hướng đến trang chủ");
-    // } else if (role === "admin") {
-    //   navigate("/admin");
-    // }
+  const handleLoginComplete = (role) => {
+    if (!role) return; // Tránh gọi nếu role không hợp lệ
+    console.log("Navigating to:", role);
+    navigate(`/${role}`); // Chỉ navigate khi role có giá trị hợp lệ
     onClose();
   };
 
@@ -356,7 +350,6 @@ const AuthForm = () => {
     }
   };
   const handleKeyDown = (event) => {
-    console.log("Key pressed:", event.key);
     if (event.key === "Enter") {
       if (signinIn) {
         handleLogin();
