@@ -1,5 +1,5 @@
 const { createPaymentUrl } = require("../configs/vnpay");
-const PaymentStrategy = require("./PaymentStrategy");
+const PaymentStrategy = require("./payment.strategy");
 
 class VNPayPayment extends PaymentStrategy {
   async createPayment(req, res) {

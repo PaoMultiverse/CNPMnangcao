@@ -10,9 +10,9 @@ const moment = require("moment");
 const crypto = require("crypto");
 const Notification = require("../models/notification.model");
 const Room = require("../models/room.model");
-const PaymentContext = require("../strategies/PaymentContext");
-const PayPalPayment = require("../strategies/PayPalPayment");
-const VNPayPayment = require("../strategies/VNPayPayment");
+const PaymentContext = require("../strategies/paymentContext.strategy");
+const PayPalPayment = require("../strategies/paypal.strategy");
+const VNPayPayment = require("../strategies/vnpay.strategy");
 
 exports.createRentPayment = async (req, res) => {
   const { paymentMethod } = req.body;

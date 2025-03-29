@@ -1,6 +1,6 @@
 const checkoutNodeJssdk = require("@paypal/checkout-server-sdk");
 const { paypalClient } = require("../configs/paypal");
-const PaymentStrategy = require("./PaymentStrategy");
+const PaymentStrategy = require("./payment.strategy");
 
 class PayPalPayment extends PaymentStrategy {
   async createPayment(req, res) {
