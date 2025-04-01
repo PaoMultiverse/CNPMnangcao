@@ -60,7 +60,7 @@ class AuthService {
         }
       );
       console.log("Registration response:", response.data);
-      return response.data; // Trả về dữ liệu từ API
+      return response.data;
     } catch (error) {
       console.error(
         "Registration failed:",

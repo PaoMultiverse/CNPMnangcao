@@ -30,13 +30,22 @@ import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import authService from "../services/authService";
-// import { formFactory } from "../utils/formFactory";
 const AuthForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = React.useRef(null);
   const [signinIn, setSigninIn] = useState(location.pathname === "/login");
+  const [errors, setErrors] = useState({});
+  const [isError, setIsError] = useState(false);
+  const [isLogInError, setIsLogInError] = useState(false);
+  const [isOtpMessage, setIsOtpMessage] = useState("");
+  const [apiMessage, setApiMessage] = useState("");
+  const [apiLogInMessage, setApiLogInMessage] = useState("");
+  const [otp, setOtp] = useState("");
+  const [isOtpValid, setIsOtpValid] = useState(true);
+  const [canResend, setCanResend] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(60);
 
   const [loginFormData, setLoginFormData] = useState({
     email: "",
@@ -52,65 +61,6 @@ const AuthForm = () => {
     password: "",
     confirmPassword: "",
   });
-
-  const [errors, setErrors] = useState({});
-  const [isError, setIsError] = useState(false);
-  const [isLogInError, setIsLogInError] = useState(false);
-  const [isOtpMessage, setIsOtpMessage] = useState("");
-
-  const [apiMessage, setApiMessage] = useState("");
-  const [apiLogInMessage, setApiLogInMessage] = useState("");
-  const [otp, setOtp] = useState("");
-  const [isOtpValid, setIsOtpValid] = useState(true);
-  const [canResend, setCanResend] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(60);
-  // useEffect(() => {
-  //   setSigninIn(location.pathname === "/login");
-
-  //   const savedFormData = JSON.parse(localStorage.getItem("formData"));
-
-  //   if (savedFormData) {
-  //     if (signinIn) {
-  //       // For login
-  //       setLoginFormData(savedFormData);
-  //     } else {
-  //       // For register
-  //       setRegisterFormData(savedFormData);
-  //     }
-  //   }
-  // }
-  // , [location.pathname, signinIn]);
-
-  useEffect(() => {
-    if (authService.isAuthenticated() && authService.token) {
-      try {
-        const user = jwtDecode(authService.token);
-        if (user && user.role) {
-          handleLoginComplete(user.role);
-        }
-      } catch (error) {
-        console.error("JWT Decode Error:", error);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!canResend) {
-      const timer = setInterval(() => {
-        setRemainingTime((prevTime) => {
-          if (prevTime === 1) {
-            setCanResend(true);
-            clearInterval(timer);
-            return 60;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer); // Clean up timer on component unmount
-    }
-  }, [canResend]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -156,12 +106,10 @@ const AuthForm = () => {
     const newErrors = {};
 
     if (signinIn) {
-      // Validate login form
       if (!loginFormData.email) newErrors.email = "Vui lòng điền Email!";
       if (!loginFormData.password)
         newErrors.password = "Vui lòng điền mật khẩu!";
     } else {
-      // Validate register form
       if (!registerFormData.name) newErrors.name = "Vui lòng điền tên!";
       if (!registerFormData.numPhone)
         newErrors.numPhone = "Vui lòng điền số điện thoại!";
@@ -178,127 +126,43 @@ const AuthForm = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleLoginComplete = (role) => {
-    if (!role) return; // Tránh gọi nếu role không hợp lệ
+    if (!role) return;
     console.log("Navigating to:", role);
-    navigate(`/${role}`); // Chỉ navigate khi role có giá trị hợp lệ
+    navigate(`/${role}`);
     onClose();
   };
 
-  // const handleLoginComplete = () => {
-  //   const user = authService.getUser();
-  //   const path = "/" + user.role;
-  //   console.log(path); // Debug user data
-  //   // Debug user data
-  //   if (user) {
-  //     navigate(path);
-  //     console.log("Ok"); // Navigate to the user's role page
-  //   } else {
-  //     console.error("Login failed: No user data found");
-  //     setApiLogInMessage("Không thể lấy thông tin người dùng!");
-  //     setIsLogInError(true);
-  //   }
-  // };
-
-  // const handleLogin = async () => {
-  //   if (validateForm()) {
-  //     try {
-  //       const token = await authService.login(
-  //         loginFormData.email,
-  //         loginFormData.password
-  //       );
-  //       const user = jwtDecode(token);
-  //       console.log(user);
-  //       if (token) {
-  //         handleLoginComplete(user.role);
-  //       }
-  //     } catch (error) {
-  //       console.error("Login failed:", error.message);
-  //       setApiLogInMessage(error.message);
-  //       setIsLogInError(true);
-  //     }
-  //   }
-  // };
-
   const handleLogin = async () => {
     if (validateForm()) {
-      const email = loginFormData.email;
-      const password = loginFormData.password;
-
       try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_API}/auth/login`,
-          {
-            email: email,
-            password: password,
-          }
+        const token = await authService.login(
+          loginFormData.email,
+          loginFormData.password
         );
-
-        const token = response.data.token;
-
         const user = jwtDecode(token);
-        console.log(user);
-        localStorage.setItem("token", token);
+        console.log("Login successful:", user);
 
         handleLoginComplete(user.role);
-
-        setApiLogInMessage("Đăng nhập thành công");
-        setIsLogInError(false);
       } catch (error) {
-        console.log(error);
-        setApiLogInMessage(error.response.data.message);
+        console.error("Login failed:", error.message);
+        setApiLogInMessage(error.message);
         setIsLogInError(true);
       }
     }
   };
 
-  // này là cũ
-  // const handleRegister = async () => {
-  //   if (validateForm()) {
-  //     const data = new FormData();
-  //     data.append("name", registerFormData.name);
-  //     data.append("email", registerFormData.email);
-  //     data.append("numPhone", registerFormData.numPhone);
-  //     data.append("gender", registerFormData.gender);
-  //     data.append("role", registerFormData.role);
-  //     data.append("password", registerFormData.password);
-
-  //     try {
-  //       const response = await axios.post(
-  //         `${process.env.REACT_APP_API}/auth/register`,
-  //         data,
-  //         {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         }
-  //       );
-
-  //       onOpen();
-  //       setApiMessage("Tạo tài khoản thành công!");
-  //       setIsError(false);
-  //     } catch (error) {
-  //       console.error(
-  //         "Registration error:",
-  //         error.response?.data || error.message
-  //       );
-  //       setApiMessage(error.response?.data?.message || "Đã xảy ra lỗi");
-  //       setIsError(true);
-  //     }
-  //   }
-  // };
-
-  // này là mới
   const handleRegister = async () => {
     if (validateForm()) {
       try {
         const response = await authService.register(registerFormData);
 
-        onOpen(); // Mở modal thông báo
+        onOpen();
         setApiMessage("Tạo tài khoản thành công!");
         setIsError(false);
 
-        console.log("Đăng ký thành công:", response); // Debug dữ liệu trả về
+        console.log("Đăng ký thành công:", response);
       } catch (error) {
         console.error("Đăng ký thất bại:", error.message);
         setApiMessage(error.message);
@@ -349,6 +213,7 @@ const AuthForm = () => {
       console.error(error);
     }
   };
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       if (signinIn) {
@@ -358,6 +223,36 @@ const AuthForm = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (authService.isAuthenticated() && authService.token) {
+      try {
+        const user = jwtDecode(authService.token);
+        if (user && user.role) {
+          handleLoginComplete(user.role);
+        }
+      } catch (error) {
+        console.error("JWT Decode Error:", error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!canResend) {
+      const timer = setInterval(() => {
+        setRemainingTime((prevTime) => {
+          if (prevTime === 1) {
+            setCanResend(true);
+            clearInterval(timer);
+            return 60;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [canResend]);
 
   return (
     <Flex
